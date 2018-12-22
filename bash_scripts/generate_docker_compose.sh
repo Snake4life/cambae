@@ -8,6 +8,7 @@
 #    AWSSECRET: "${AWSSECRET}"
 #    SERVICE_IP: "172.26.5.97"
 #    DEBUG: "chaturbae:*"
+
 cat <<EOF >>docker-compose.template
 ##CLEAN_USERNAME##:
     image: '##IMAGE##'
@@ -16,10 +17,10 @@ cat <<EOF >>docker-compose.template
       io.rancher.container.hostname_override: container_name
       io.rancher.container.pull_image: always
     environment:
-      CB_USERNAME: "##MODEL_NAME##"
+      MODEL_NAME: "##MODEL_NAME##"
       SERVICE_IP: "watcher1.backend.chaturbae.tv"
-      SYSLOG_TAG: '{docker: "cmyfreebae-client"}'
-      LOGSTASH_FIELDS: "platform=docker,job=chaturbae-client,mfc_username=##MODEL_NAME##"
+      SYSLOG_TAG: '{docker: "myfreebae-client"}'
+      LOGSTASH_FIELDS: "platform=docker,job=myfreebae-client,mfc_username=##MODEL_NAME##"
       DECODE_JSON_LOGS: "true"
       DEBUG: "myfreebae:*"
 
