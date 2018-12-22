@@ -14,10 +14,6 @@ var client_log = logger.child({ event: 'logging:myfreebae-client' })
 var nudity_log = logger.child({ event: 'logging:myfreebae-nude' })
 var ai_log = logger.child({ event: 'logging:myfreebae-ai' })
 var hlsURL = ""
-socket.on("connect", function(e){
-  console.log('test');
-
-})
 socket.on("loggedIn", function(u){
     var command = `bash mfc_id.sh ${modelName}`
     var child = exec(command, function(error, stdout, stderr){
@@ -55,10 +51,9 @@ if (msg.Type == MessageType.FCTYPE_USERNAMELOOKUP){
         var mfcServers = JSON.parse(body).h5video_servers;
         var videoServer = mfcServers[camserv];
         setHlsUrl(`https://${videoServer}.myfreecams.com/NxServer/ngrp:mfc_10${modelID}.f4v_desktop/manifest.mpd`, videoServer, function(){
-          console.log('updated hlsurl');
+          client_log.info(`hlsurl has been set`);
         });
     });
-    console.log()
   }
 catch(e){
   client_log.info(`${modelName} appears to be offline or the backend websockets aren't responding`);
@@ -121,9 +116,7 @@ setInterval(function() {
     child.stdout.on('data', (data) => {
       var score = data.toString();
       score = score*100
-      console.log(score);
       nsfwScore = parseInt(score);
-      console.log(nsfwScore)
       ai_log.info(`AI Detected a NSFW Score of ${nsfwScore}%`);
       if(nsfwScore > 51){
         naked_logger = logger.child({event: 'logging:myfreebae-naked', is_naked: 'true', nsfw_score: `${nsfwScore}`});
