@@ -91,7 +91,7 @@ socket.on("mfcMessage", function(msg){
     child.on('exit', () => {
       child.stdout.on('data', (data) => {
       nudity_log.info(`background nudity worker exited gracefully`);
-        score = stdout.toString();
+        score = data.toString();
         score = score*100
         nsfwScore = parseInt(score);
         ai_log.info(`AI Detected a NSFW Score of ${nsfwScore}%`);
