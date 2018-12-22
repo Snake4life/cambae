@@ -119,7 +119,7 @@ setInterval(function() {
   child.on('error', err => nudity_log.error('Error:', err));
   child.on('exit', () => {
     child.stdout.on('data', (data) => {
-      var score = data.toString()
+      var score = data.toString();
       score = score*100
       console.log(score);
       nsfwScore = parseInt(score);

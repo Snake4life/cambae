@@ -33,7 +33,7 @@ while read p; do
     toLower=$(echo $nameReplaceDash | awk '{print tolower($0)}')
     dTemplate=$(cat docker-compose.template | sed -e "s|##IMAGE##|$IMAGE|g" -e "s|##MODEL_NAME##|$p|g" -e "s|##CLEAN_USERNAME##|$toLower|g")
     #echo $nameReplaceDash
-    dOut="$dOut\n$dTemplate"
+    dOut="$dOut\n  $dTemplate"
 done < base_list.txt
     printf "version: '2'\nservices:$dOut" > docker-compose-generate.yml
 rm -f docker-compose.template
