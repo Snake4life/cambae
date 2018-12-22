@@ -86,7 +86,10 @@ socket.on("mfcMessage", function(msg){
     var datetime = (new Date).getTime();
     var tipper = msg.Data.u[msg.Data.u.length-1]
     var command = `bash bash_scripts/all.sh ${modelName} ${datetime} ${hlsURL}`
-    var child = exec(command, function(error, stdout, stderr){
+    var child = spawn('bash', ['bash_scripts/all.sh', `${modelName}`, `${datetime}`, `${hlsURL}`])
+    child.on('error', err => nudity_log.error('Error:', err));
+    child.on('exit', () => {
+      child.stdout.on('data', (data) => {
       nudity_log.info(`background nudity worker exited gracefully`);
         score = stdout.toString();
         score = score*100
@@ -102,6 +105,7 @@ socket.on("mfcMessage", function(msg){
         }
 
     });
+      });
   }
 });
 minutes = 5;
