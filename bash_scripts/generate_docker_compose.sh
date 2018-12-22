@@ -17,7 +17,7 @@ cat <<EOF >>docker-compose.template
       io.rancher.container.hostname_override: container_name
       io.rancher.container.pull_image: always
     environment:
-      MODEL_NAME: "##MODEL_NAME##"
+      MODELNAME: "##MODEL_NAME##"
       SERVICE_IP: "watcher1.backend.chaturbae.tv"
       SYSLOG_TAG: '{docker: "myfreebae-client"}'
       LOGSTASH_FIELDS: "platform=docker,job=myfreebae-client,mfc_username=##MODEL_NAME##"
