@@ -59,4 +59,4 @@ typings/
 .env
 flask-bootstrap-boilerplate
 
-docker-compose-generated.yml
+docker-compose-generate.yml
