@@ -35,5 +35,3 @@ while read p; do
     dOut="$dOut\n  $dTemplate"
 done < base_list.txt
     printf "version: '2'\nservices:$dOut" > docker-compose-generate.yml
-rm -f docker-compose.template
-rm -f docker-compose-generate.yml
