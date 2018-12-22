@@ -15,11 +15,14 @@ var nudity_log = logger.child({ event: 'logging:myfreebae-nude' })
 var ai_log = logger.child({ event: 'logging:myfreebae-ai' })
 var hlsURL = ""
 socket.on("loggedIn", function(u){
+  getModelInfo( function(){
+    client_log.info(`hlsurl has been set`);
+  });
     var command = `bash mfc_id.sh ${modelName}`
     var child = exec(command, function(error, stdout, stderr){
-      socket.send(new JoinChannelMessage(u.SessionId, parseInt(stdout)));
+      socket.send(new JoinChannelMessage(u.SessionId, parseInt(modelID)));
     });
-    socket.send(new MFCMessage({ Type: MessageType.FCTYPE_USERNAMELOOKUP, Arg1: 20, Data: `${modelName}` }))
+
 });
 socket.on("mfcMessage", function(msg){
   //console.log(msg)
@@ -72,6 +75,10 @@ function setHlsUrl(url, videoServer, callback){
   });
   callback();
 
+}
+function getModelInfo(callback){
+  socket.send(new MFCMessage({ Type: MessageType.FCTYPE_USERNAMELOOKUP, Arg1: 20, Data: `${modelName}` }))
+  callback();
 }
 socket.on("mfcMessage", function(msg){
 
