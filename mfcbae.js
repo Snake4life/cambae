@@ -142,7 +142,7 @@ setInterval(function() {
         firstNaked += 1;
       }
       else{
-        not_naked_logger = logger.child({event: 'logging:myfreebae-not-naked', is_naked: 'false' , site: 'mfc', model_username: `${modelName}`});
+        not_naked_logger = logger.child({event: 'logging:myfreebae-not-naked', is_naked: 'false' , site: 'mfc', model_username: `${modelName}`, nsfw_score: nsfwScore});
         not_naked_logger.info(`${modelName} does not appear to be naked`);
         if(firstNaked > 10){
             ai_log.info(`irc post timeout reached for ${modelName}. Resetting counter`);
