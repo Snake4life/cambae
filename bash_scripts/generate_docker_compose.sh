@@ -20,7 +20,7 @@ cat <<EOF >>docker-compose.template
       MODELNAME: "##MODEL_NAME##"
       SERVICE_IP: "watcher4.backend.chaturbae.tv"
       SYSLOG_TAG: '{docker: "myfreebae-client"}'
-      LOGSTASH_FIELDS: "platform=docker,job=myfreebae-client,mfc_username=##MODEL_NAME##"
+      LOGSTASH_FIELDS: "platform=docker,job=myfreebae-client,model_username=##MODEL_NAME##"
       DECODE_JSON_LOGS: "true"
       DEBUG: "myfreebae:*"
 
