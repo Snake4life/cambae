@@ -10,9 +10,9 @@ var modelID = ""
 var request = require("request");
 var exec = require('child_process').exec;
 var spawn = require('child_process').spawn;
-var client_log = logger.child({ event: 'logging:myfreebae-client' })
-var nudity_log = logger.child({ event: 'logging:myfreebae-nude' })
-var ai_log = logger.child({ event: 'logging:myfreebae-ai' })
+var client_log = logger.child({ event: 'logging:myfreebae-client' , site: 'mfc', model_username: `${modelName}` })
+var nudity_log = logger.child({ event: 'logging:myfreebae-nude', site: 'mfc', model_username: `${modelName}` })
+var ai_log = logger.child({ event: 'logging:myfreebae-ai', site: 'mfc', model_username: `${modelName}` })
 var hlsURL = ""
 socket.on("loggedIn", function(u){
   getModelInfo( function(){
@@ -30,7 +30,7 @@ socket.on("mfcMessage", function(msg){
     if (msg.Type == MessageType.FCTYPE_CMESG){
         //ar message = JSON.stringify(msg.Data);
         try {
-          var myfreebae_message_logger = logger.child({ event: 'logging:myfreebae-message', mfc_chat_username: msg.Data.nm, mfc_model: modelName, mfc_model_id: modelID})
+          var myfreebae_message_logger = logger.child({ event: 'logging:myfreebae-message', mfc_chat_username: msg.Data.nm, mfc_model: modelName, mfc_model_id: modelID, site: 'mfc', model_username: `${modelName}`})
           //console.log(msg.Data)
           //myfreebae_message_logger.info(msg.Data)
           myfreebae_message_logger.info(decodeURIComponent(msg.Data.msg))
@@ -96,11 +96,11 @@ socket.on("mfcMessage", function(msg){
         nsfwScore = parseInt(score);
         ai_log.info(`AI Detected a NSFW Score of ${nsfwScore}%`);
         if(nsfwScore > 51){
-          naked_logger = logger.child({event: 'logging:myfreebae-tip', tipper: tipper, mfc_model: modelName, mfc_model_id: modelID, tip_amount: parseInt(msg.Data.tokens), is_naked: 'true', nsfw_score: nsfwScore});
+          naked_logger = logger.child({event: 'logging:myfreebae-tip', tipper: tipper, mfc_model: modelName, mfc_model_id: modelID, tip_amount: parseInt(msg.Data.tokens), is_naked: 'true', nsfw_score: nsfwScore, site: 'mfc', model_username: `${modelName}`});
           naked_logger.info(`${modelName} appears to be naked`);
         }
         else{
-          not_naked_logger = logger.child({event: 'logging:myfreebae-tip', tipper: tipper, mfc_model: modelName, mfc_model_id: modelID, tip_amount: parseInt(msg.Data.tokens), is_naked: 'false', nsfw_score: nsfwScore });
+          not_naked_logger = logger.child({event: 'logging:myfreebae-tip', tipper: tipper, mfc_model: modelName, mfc_model_id: modelID, tip_amount: parseInt(msg.Data.tokens), is_naked: 'false', nsfw_score: nsfwScore, site: 'mfc', model_username: `${modelName}` });
           not_naked_logger.info(`${modelName} does not appear to be naked`);
         }
 
@@ -130,7 +130,7 @@ setInterval(function() {
       nsfwScore = parseInt(score);
       ai_log.info(`AI Detected a NSFW Score of ${nsfwScore}%`);
       if(nsfwScore > 51){
-        naked_logger = logger.child({event: 'logging:myfreebae-naked', is_naked: 'true', nsfw_score: `${nsfwScore}`});
+        naked_logger = logger.child({event: 'logging:myfreebae-naked', is_naked: 'true', nsfw_score: `${nsfwScore}`, site: 'mfc', model_username: `${modelName}`});
         naked_logger.info(`${modelName} appears to be naked`);
         if(firstNaked < 1){
           ai_log.info(`First time seen naked: ${firstNaked}`);
@@ -142,7 +142,7 @@ setInterval(function() {
         firstNaked += 1;
       }
       else{
-        not_naked_logger = logger.child({event: 'logging:myfreebae-not-naked', is_naked: 'false' });
+        not_naked_logger = logger.child({event: 'logging:myfreebae-not-naked', is_naked: 'false' , site: 'mfc', model_username: `${modelName}`});
         not_naked_logger.info(`${modelName} does not appear to be naked`);
         if(firstNaked > 10){
             ai_log.info(`irc post timeout reached for ${modelName}. Resetting counter`);
