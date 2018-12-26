@@ -89,20 +89,27 @@ socket.on("mfcMessage", function(msg){
     var child = spawn('bash', ['bash_scripts/all.sh', `${modelName}`, `${datetime}`, `${hlsURL}`])
     child.on('error', err => nudity_log.error('Error:', err));
     child.on('exit', () => {
+
       child.stdout.on('data', (data) => {
       nudity_log.info(`background nudity worker exited gracefully`);
         score = data.toString();
         score = score*100
         nsfwScore = parseInt(score);
-        ai_log.info(`AI Detected a NSFW Score of ${nsfwScore}%`);
-        if(nsfwScore > 51){
-          naked_logger = logger.child({event: 'logging:myfreebae-tip', tipper: tipper, mfc_model: modelName, mfc_model_id: modelID, tip_amount: parseInt(msg.Data.tokens), is_naked: 'true', nsfw_score: nsfwScore, site: 'mfc', model_username: `${modelName}`});
-          naked_logger.info(`${modelName} appears to be naked`);
+        if(isNaN(nsfwScore)){
+          ai_log.info(`NSFW score returned NaN, skipping`);
         }
         else{
-          not_naked_logger = logger.child({event: 'logging:myfreebae-tip', tipper: tipper, mfc_model: modelName, mfc_model_id: modelID, tip_amount: parseInt(msg.Data.tokens), is_naked: 'false', nsfw_score: nsfwScore, site: 'mfc', model_username: `${modelName}` });
-          not_naked_logger.info(`${modelName} does not appear to be naked`);
+          ai_log.info(`AI Detected a NSFW Score of ${nsfwScore}%`);
+          if(nsfwScore > 51){
+            naked_logger = logger.child({event: 'logging:myfreebae-tip', tipper: tipper, mfc_model: modelName, mfc_model_id: modelID, tip_amount: parseInt(msg.Data.tokens), is_naked: 'true', nsfw_score: nsfwScore, site: 'mfc', model_username: `${modelName}`});
+            naked_logger.info(`${modelName} appears to be naked`);
+          }
+          else{
+            not_naked_logger = logger.child({event: 'logging:myfreebae-tip', tipper: tipper, mfc_model: modelName, mfc_model_id: modelID, tip_amount: parseInt(msg.Data.tokens), is_naked: 'false', nsfw_score: nsfwScore, site: 'mfc', model_username: `${modelName}` });
+            not_naked_logger.info(`${modelName} does not appear to be naked`);
+          }
         }
+
 
     });
       });
