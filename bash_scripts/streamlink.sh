@@ -9,7 +9,7 @@ function finish {
 }
 trap finish EXIT
 
-streamlink -Q "$url" worst -o "${USERNAME}-${datetime}.mkv" &
+streamlink -Q "https://www.myfreecams.com/#${USERNAME}" worst -o "${USERNAME}-${datetime}.mkv" &
 pid=$!
 
 sleep "3"

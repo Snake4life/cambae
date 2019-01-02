@@ -121,9 +121,11 @@ COPY package.json .
 
 RUN npm install pino
 
+COPY streamlink-plugins/myfreecams.py /root/.config/streamlink/plugins/myfreecams.py
 
 # Bundle app source
 COPY . .
+
 
 
 #&& mkdir -p /home/blessuser/Downloads
