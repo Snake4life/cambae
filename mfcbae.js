@@ -74,6 +74,7 @@ socket.on("mfcMessage", function(msg){
         score = data.toString();
         score = score*100
         nsfwScore = parseInt(score);
+        tip_amount = parseInt(msg.Data.tokens);
         if(isNaN(nsfwScore)){
           ai_log.error(`NSFW score returned NaN, skipping`);
         }
