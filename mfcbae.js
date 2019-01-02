@@ -56,6 +56,7 @@ socket.on("mfcMessage", function(msg){
         }
         catch(e){
           client_log.error(`${modelName} appears to be offline or the backend websockets aren't responding`);
+          process.exit(1);
         }
       }
 });
