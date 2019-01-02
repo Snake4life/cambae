@@ -55,7 +55,7 @@ socket.on("mfcMessage", function(msg){
           });
         }
         catch(e){
-          client_log.info(`${modelName} appears to be offline or the backend websockets aren't responding`);
+          client_log.error(`${modelName} appears to be offline or the backend websockets aren't responding`);
         }
       }
 });
@@ -68,24 +68,23 @@ socket.on("mfcMessage", function(msg){
     var child = spawn('bash', ['bash_scripts/all.sh', `${modelName}`, `${datetime}`, `${hlsURL}`])
     child.on('error', err => nudity_log.error('Error:', err));
     child.on('exit', () => {
-
+      nudity_log.debug(`background nudity worker exited without throwing error`);
       child.stdout.on('data', (data) => {
-      nudity_log.info(`background nudity worker exited gracefully`);
         score = data.toString();
         score = score*100
         nsfwScore = parseInt(score);
         if(isNaN(nsfwScore)){
-          ai_log.info(`NSFW score returned NaN, skipping`);
+          ai_log.error(`NSFW score returned NaN, skipping`);
         }
         else{
           ai_log.info(`AI Detected a NSFW Score of ${nsfwScore}%`);
           if(nsfwScore > 51){
             naked_logger = logger.child({event: 'logging:myfreebae-tip', tipper: tipper, mfc_model: modelName, mfc_model_id: modelID, tip_amount: parseInt(msg.Data.tokens), is_naked: 'true', nsfw_score: nsfwScore, site: 'mfc', model_username: `${modelName}`});
-            naked_logger.info(`${modelName} appears to be naked`);
+            naked_logger.info(`Tip Amount: ${tip_amount} - ${modelName} appears to be naked`);
           }
           else{
             not_naked_logger = logger.child({event: 'logging:myfreebae-tip', tipper: tipper, mfc_model: modelName, mfc_model_id: modelID, tip_amount: parseInt(msg.Data.tokens), is_naked: 'false', nsfw_score: nsfwScore, site: 'mfc', model_username: `${modelName}` });
-            not_naked_logger.info(`${modelName} does not appear to be naked`);
+            not_naked_logger.info(`Tip Amount: ${tip_amount} - ${modelName} does not appear to be naked`);
           }
         }
 
