@@ -23,6 +23,7 @@ cat <<EOF >>docker-compose.template
       LOGSTASH_FIELDS: "platform=docker,job=myfreebae-client,model_username=##MODEL_NAME##"
       DECODE_JSON_LOGS: "true"
       DEBUG: "myfreebae:*"
+    mem_reservation: 512m
 
 EOF
 dOut=""
