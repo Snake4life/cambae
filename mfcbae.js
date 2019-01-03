@@ -55,14 +55,13 @@ socket.on("mfcMessage", function(msg){
           });
         }
         catch(e){
+          var min=10;
+          var max=20;
+          var randomTime =Math.floor(Math.random() * (+max - +min)) + +min;
+          var timeInt = parseInt(`${randomTime}00`)
           minutes = 5;
-          if(debugTime == "true"){
-             var the_interval = 5 * 1000;
-          }
-          else {
-            var the_interval = minutes * 60 * 1000;
-          }
-          client_log.error(`${modelName} appears to be offline or the backend websockets aren't responding. Waiting 5 minutes before trying again`);
+          var the_interval = minutes * 60 * timeInt;
+          client_log.error(`${modelName} appears to be offline or the backend websockets aren't responding. Waiting ${the_interval} before trying again (yay for random sleeps to fix bad code)`);
           setTimeout(function(){
             client_log.error(`${modelName} appears to be offline or the backend websockets aren't responding. Exiting`);
             process.exit(1);
