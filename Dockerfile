@@ -126,7 +126,9 @@ COPY streamlink-plugins/myfreecams.py /root/.config/streamlink/plugins/myfreecam
 # Bundle app source
 COPY . .
 
+RUN npm install
 
+RUN npm install -g typescript
 
 #&& mkdir -p /home/blessuser/Downloads
 #&& chown -R blessuser:blessuser /home/blessuser \

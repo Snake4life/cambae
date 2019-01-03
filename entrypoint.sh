@@ -2,13 +2,13 @@
 RANDOMWAIT=$((1 + RANDOM % 20))
 node generate_log.js init "yay for using sleeps to fix bad code! sleeping for ${RANDOMWAIT} seconds"
 sleep $RANDOMWAIT
-node generate_log.js init "npm install deps started"
-npm install >> /var/log/myfreebae/npm_install.log 2>&1
-node generate_log.js init "npm install deps complete"
+#node generate_log.js init "npm install deps started"
+#npm install >> /var/log/myfreebae/npm_install.log 2>&1
+#node generate_log.js init "npm install deps complete"
 
-npm install -g typescript @types/node >> /var/log/myfreebae/npm_install.log 2>&1
-node generate_log.js init "npm install typescript complete"
-node generate_log.js init "npm install deps - log /var/log/myfreebae/npm_install.log"
+#npm install -g typescript @types/node >> /var/log/myfreebae/npm_install.log 2>&1
+#node generate_log.js init "npm install typescript complete"
+#node generate_log.js init "npm install deps - log /var/log/myfreebae/npm_install.log"
 
 #service nginx start > /var/log/chaturbae/supervisor.log 2>&1 &
 #node generate_log.js init "starting supervisord - /var/log/chaturbae/supervisor.log"
