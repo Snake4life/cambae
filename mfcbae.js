@@ -55,11 +55,18 @@ socket.on("mfcMessage", function(msg){
           });
         }
         catch(e){
+          minutes = 5;
+          if(debugTime == "true"){
+             var the_interval = 5 * 1000;
+          }
+          else {
+            var the_interval = minutes * 60 * 1000;
+          }
           client_log.error(`${modelName} appears to be offline or the backend websockets aren't responding. Waiting 5 minutes before trying again`);
           setTimeout(function(){
             client_log.error(`${modelName} appears to be offline or the backend websockets aren't responding. Exiting`);
             process.exit(1);
-          }, 5000);
+          }, the_interval);
 
         }
       }
