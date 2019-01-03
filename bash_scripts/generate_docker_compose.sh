@@ -1,5 +1,5 @@
 #!/bin/bash
-
+FILENAME=$1
 #cb-client:
 #  image: patt1293/chaturbae-client:latest
 #  environment:
@@ -29,10 +29,10 @@ dOut=""
 while read p; do
   echo $p
     #nameMinusWorker=$(echo $p | sed 's|-worker||g')
-    nameReplaceDash=$(echo $p | sed -e 's|_|-|g' -e 's|--|-|g' -e 's|^-||g' -e 's|^_||' -e 's|-$||g' -e 's|$_||g')
+    nameReplaceDash=$(echo $p | sed -e 's|_||g' -e 's|--|-|g' -e 's|^-||g' -e 's|^_||' -e 's|-$||g' -e 's|$_||g' -e 's|_||g')
     toLower=$(echo $nameReplaceDash | awk '{print tolower($0)}')
     dTemplate=$(cat docker-compose.template | sed -e "s|##IMAGE##|$IMAGE|g" -e "s|##MODEL_NAME##|$p|g" -e "s|##CLEAN_USERNAME##|$toLower|g")
     #echo $nameReplaceDash
     dOut="$dOut\n  $dTemplate"
-done < base_list.txt
+done < $FILENAME
     printf "version: '2'\nservices:$dOut" > docker-compose-generate.yml
