@@ -18,7 +18,7 @@ services:
         service: chaturbae-irc-nudeapi/irc-worker
       - source_port: 6901
         target_port: 6901
-        service: elk/app
+        service: cambae-backend-api/app
     health_check:
       port: 42
       interval: 2000
