@@ -36,6 +36,7 @@ socket.on("mfcMessage", function(msg){
       }
       if (msg.Type == MessageType.FCTYPE_USERNAMELOOKUP){
         try {
+
           client_log.debug(`new user look up for ${msg.Data.uid}`);
           client_log.debug(`data output for `+ JSON.stringify(msg.Data));
           modelID = msg.Data.uid;
@@ -53,6 +54,7 @@ socket.on("mfcMessage", function(msg){
               client_log.debug(`hlsurl has been set`);
             });
           });
+          var online_log = logger.child({ event: 'logging:myfreebae-online', site: 'mfc', model_username: `${modelName}`, status: 'online' })
         }
         catch(e){
           var min=10;
