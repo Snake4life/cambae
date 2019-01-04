@@ -55,6 +55,7 @@ socket.on("mfcMessage", function(msg){
             });
           });
           var online_log = logger.child({ event: 'logging:myfreebae-online', site: 'mfc', model_username: `${modelName}`, status: 'online' })
+          online_log.info(`${modelName} appears to be online`)
         }
         catch(e){
           var min=10;
