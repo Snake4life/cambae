@@ -94,7 +94,7 @@ socket.on("mfcMessage", function(msg){
           }
           else{
             not_naked_logger = logger.child({event: 'logging:myfreebae-tip', tipper: tipper, mfc_model: modelName, mfc_model_id: modelID, tip_amount: parseInt(msg.Data.tokens), usd_amount: converted_dollar, is_naked: 'false', nsfw_score: nsfwScore, site: 'mfc', model_username: `${modelName}` });
-            not_naked_logger.info(`Tip Amount: ${tip_amount} - ${modelName} does not appear to be naked`);
+            not_naked_logger.info(`Tip Amount: ${tip_amount} - Converted to Dollars: ${converted_dollar} - ${modelName} does not appear to be naked`);
           }
         }
 
