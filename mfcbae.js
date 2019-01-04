@@ -67,6 +67,8 @@ socket.on("mfcMessage", function(msg){
           client_log.error(`${modelName} appears to be offline or the backend websockets aren't responding. Waiting ${the_interval} before trying again (yay for random sleeps to fix bad code)`);
           setTimeout(function(){
             client_log.error(`${modelName} appears to be offline or the backend websockets aren't responding. Exiting`);
+            var offline_log = logger.child({ event: 'logging:myfreebae-online', site: 'mfc', model_username: `${modelName}`, status: 'offline' })
+            offline_log.info(`${modelName} appears to be offline`)
             process.exit(1);
           }, the_interval);
 
