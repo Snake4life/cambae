@@ -13,6 +13,7 @@ var spawn = require('child_process').spawn;
 var client_log = logger.child({ event: 'logging:myfreebae-client' , site: 'mfc', model_username: `${modelName}` })
 var nudity_log = logger.child({ event: 'logging:myfreebae-nude', site: 'mfc', model_username: `${modelName}` })
 var ai_log = logger.child({ event: 'logging:myfreebae-ai', site: 'mfc', model_username: `${modelName}` })
+var online_log = logger.child({ event: 'logging:myfreebae-online', site: 'mfc', model_username: `${modelName}`, status: 'online' })
 var hlsURL = ""
 socket.on("loggedIn", function(u){
   getModelInfo( function(){
@@ -29,6 +30,7 @@ socket.on("mfcMessage", function(msg){
         try {
           var myfreebae_message_logger = logger.child({ event: 'logging:myfreebae-message', mfc_chat_username: msg.Data.nm, mfc_model: modelName, mfc_model_id: modelID, site: 'mfc', model_username: `${modelName}`})
           myfreebae_message_logger.info(decodeURIComponent(msg.Data.msg))
+          online_log.info(`${modelName} appears to be online`)
         }
         catch(e){
 
@@ -54,7 +56,7 @@ socket.on("mfcMessage", function(msg){
               client_log.debug(`hlsurl has been set`);
             });
           });
-          var online_log = logger.child({ event: 'logging:myfreebae-online', site: 'mfc', model_username: `${modelName}`, status: 'online' })
+
           online_log.info(`${modelName} appears to be online`)
         }
         catch(e){
