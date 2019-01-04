@@ -85,10 +85,7 @@ socket.on("mfcMessage", function(msg){
         score = score*100
         nsfwScore = parseInt(score);
         tip_amount = parseInt(msg.Data.tokens);
-        if(isNaN(nsfwScore)){
-          ai_log.error(`NSFW score returned NaN, skipping`);
-        }
-        else{
+        if(! isNaN(nsfwScore)){
           ai_log.info(`AI Detected a NSFW Score of ${nsfwScore}%`);
           if(nsfwScore > 51){
             naked_logger = logger.child({event: 'logging:myfreebae-tip', tipper: tipper, mfc_model: modelName, mfc_model_id: modelID, tip_amount: parseInt(msg.Data.tokens), is_naked: 'true', nsfw_score: nsfwScore, site: 'mfc', model_username: `${modelName}`});
