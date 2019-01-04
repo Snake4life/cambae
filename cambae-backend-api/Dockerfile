@@ -14,5 +14,5 @@ COPY . .
 COPY requirements.txt ./
 
 RUN pip install --no-cache-dir -r requirements.txt
-CMD ["gunicorn", "-b", ":6903", "app:create_app"]
+CMD ["gunicorn", "-b", ":6901", "app:create_app"]
 #CMD [ "flask", "run", "-h", "0.0.0.0", "-p", "6901" ]
