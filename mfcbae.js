@@ -93,10 +93,11 @@ socket.on("mfcMessage", function(msg){
         nsfwScore = parseInt(score);
         tip_amount = parseInt(msg.Data.tokens);
         converted_dollar = tip_amount * .05
+        mfc_total_dollars = tip_amount * .085483
         if(!isNaN(nsfwScore)){
           ai_log.info(`AI Detected a NSFW Score of ${nsfwScore}%`);
           if(nsfwScore > 51){
-            naked_logger = logger.child({event: 'logging:myfreebae-tip', tipper: tipper, mfc_model: modelName, mfc_model_id: modelID, tip_amount: parseInt(msg.Data.tokens), usd_amount: converted_dollar, is_naked: 'true', nsfw_score: nsfwScore, site: 'mfc', model_username: `${modelName}`});
+            naked_logger = logger.child({event: 'logging:myfreebae-tip', tipper: tipper, mfc_model: modelName, mfc_model_id: modelID, tip_amount: parseInt(msg.Data.tokens), usd_amount: converted_dollar, mfc_usd_amount: mfc_total_dollars, is_naked: 'true', nsfw_score: nsfwScore, site: 'mfc', model_username: `${modelName}`});
             naked_logger.info(`Tip Amount: ${tip_amount} - Converted to Dollars: ${converted_dollar} - ${modelName} appears to be naked`);
           }
           else{
