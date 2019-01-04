@@ -1,12 +1,29 @@
 # WIP
 
-## This repo will be merged into the parent "cambae" repo soon
-
 ## Description
 
 This project started as all good ones do, with a little bit of alcohol and a thought "I wonder if I can automate notifications when a live streaming model is doing something _interesting_"
 
 The result is an unholy concoction of node.js, python flask, docker, rancher, ELK
+
+## Primary Focus
+
+- [ ] (IN PROGRESS) build backend api for returning values like online status, clothing, hair color, ethnicity
+- [ ] (IN PROGRESS) add online status tracker to mfcbae.js to better track model status
+- [ ] continue building out / finding metrics to track in ELK
+
+## Upcoming Focus
+
+- [ ] front end of some sort for managing model lists
+- [ ] hair color detection
+- [ ] ethnicity detection
+- [ ] better nude confirmation
+- [ ] investigate removing the dependency for chrome with chaturbae. At least remove the dependency for it to be running 24x7.
+
+## Hopes and Dreams
+
+- [ ] come up with a magical way to validate my data without literally running two replicas
+
 ## Overall goals
 
 - [X] Track models on cam sites, and alert when online/offline/event happens
@@ -19,8 +36,6 @@ The result is an unholy concoction of node.js, python flask, docker, rancher, EL
 
 - [ ] god only knows what else I come up with
 
-## Basic screenshots
+## WIP Dashboard
 
-![](http://ul.gy/aCnV0.png)
-![](http://ul.gy/dgHTi.png)
-![](http://ul.gy/l0tSK.png)
+![](http://ul.gy/dMnoK.png)

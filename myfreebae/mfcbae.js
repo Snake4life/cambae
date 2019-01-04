@@ -83,32 +83,38 @@ socket.on("mfcMessage", function(msg){
   if (msg.Type == MessageType.FCTYPE_TOKENINC){
     var datetime = (new Date).getTime();
     var tipper = msg.Data.u[msg.Data.u.length-1]
-    var child = spawn('bash', ['bash_scripts/all.sh', `${modelName}`, `${datetime}`, `${hlsURL}`])
-    child.on('error', err => nudity_log.error('Error:', err));
-    child.on('exit', () => {
-      nudity_log.debug(`background nudity worker exited without throwing error`);
-      child.stdout.on('data', (data) => {
-        score = data.toString();
-        score = score*100
-        nsfwScore = parseInt(score);
-        tip_amount = parseInt(msg.Data.tokens);
-        converted_dollar = tip_amount * .05
-        mfc_total_dollars = tip_amount * .085483
-        if(!isNaN(nsfwScore)){
-          ai_log.info(`AI Detected a NSFW Score of ${nsfwScore}%`);
-          if(nsfwScore > 51){
-            naked_logger = logger.child({event: 'logging:myfreebae-tip', tipper: tipper, mfc_model: modelName, mfc_model_id: modelID, tip_amount: parseInt(msg.Data.tokens), usd_amount: converted_dollar, mfc_usd_amount: mfc_total_dollars, is_naked: 'true', nsfw_score: nsfwScore, site: 'mfc', model_username: `${modelName}`});
-            naked_logger.info(`Tip Amount: ${tip_amount} - Converted to Dollars: ${converted_dollar} - ${modelName} appears to be naked`);
-          }
-          else{
-            not_naked_logger = logger.child({event: 'logging:myfreebae-tip', tipper: tipper, mfc_model: modelName, mfc_model_id: modelID, tip_amount: parseInt(msg.Data.tokens), usd_amount: converted_dollar, is_naked: 'false', nsfw_score: nsfwScore, site: 'mfc', model_username: `${modelName}` });
-            not_naked_logger.info(`Tip Amount: ${tip_amount} - Converted to Dollars: ${converted_dollar} - ${modelName} does not appear to be naked`);
-          }
-        }
-
-
+    request('http://watcher4.backend.chaturbae.tv:6901/api/v1/mfc/naked/'+modelName, function (error, response, body) {
+      if (error) {
+        client_log.error(`error ${error}`);
+        //throw new Error("Unable to get a list of servers from MFC");
+      }
+      resp = JSON.parse(body);
+      ai_log.info(`response ${resp}`);
+      //score = data.toString();
+      //score = score*100
+      //nsfwScore = parseInt(score);
+      //tip_amount = parseInt(msg.Data.tokens);
+      //converted_dollar = tip_amount * .05
+      //mfc_total_dollars = tip_amount * .085483
+      //if(!isNaN(nsfwScore)){
+      //  ai_log.info(`AI Detected a NSFW Score of ${nsfwScore}%`);
+      //  if(nsfwScore > 51){
+      //    naked_logger = logger.child({event: 'logging:myfreebae-tip', tipper: tipper, mfc_model: modelName, mfc_model_id: modelID, tip_amount: parseInt(msg.Data.tokens), usd_amount: converted_dollar, mfc_usd_amount: mfc_total_dollars, is_naked: 'true', //nsfw_score: nsfwScore, site: 'mfc', model_username: `${modelName}`});
+      //    naked_logger.info(`Tip Amount: ${tip_amount} - Converted to Dollars: ${converted_dollar} - ${modelName} appears to be naked`);
+      //  }
+      //  else{
+      //    not_naked_logger = logger.child({event: 'logging:myfreebae-tip', tipper: tipper, mfc_model: modelName, mfc_model_id: modelID, tip_amount: parseInt(msg.Data.tokens), usd_amount: converted_dollar, is_naked: 'false', nsfw_score: nsfwScore, site: //'mfc', model_username: `${modelName}` });
+      //    not_naked_logger.info(`Tip Amount: ${tip_amount} - Converted to Dollars: ${converted_dollar} - ${modelName} does not appear to be naked`);
+      //  }
+      //}
     });
-      });
+    //var child = spawn('bash', ['bash_scripts/all.sh', `${modelName}`, `${datetime}`, `${hlsURL}`])
+    //child.on('error', err => nudity_log.error('Error:', err));
+    //child.on('exit', () => {
+    //  nudity_log.debug(`background nudity worker exited without throwing error`);
+    //  child.stdout.on('data', (data) => {
+    //  });
+    //});
   }
 });
 
