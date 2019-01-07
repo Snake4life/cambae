@@ -3,7 +3,7 @@ stage ('Git Clone latest repo') {
     deleteDir()
     withCredentials([file(credentialsId: 'env', variable: 'envi')]) {
       dir('services/cambae-backend-api-node'){
-       sh "cp \$envi .env"
+       sh "cat \$envi > .env"
        sh "cat \$envi"
      }
     }
