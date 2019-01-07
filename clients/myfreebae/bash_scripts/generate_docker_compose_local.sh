@@ -11,7 +11,7 @@ FILENAME=$1
 rm -rf docker-compose.template
 cat <<EOF >>docker-compose.template
 ##CLEAN_USERNAME##:
-    image: '##IMAGE##'
+    image: 'patt1293/myfreebae:build-96'
     labels:
       app: myfreebae:client
       io.rancher.container.hostname_override: container_name

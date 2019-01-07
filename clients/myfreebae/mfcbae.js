@@ -56,7 +56,7 @@ socket.on("mfcMessage", function(msg){
               client_log.debug(`hlsurl has been set`);
             });
           });
-
+          var online_log = logger.child({ event: 'logging:myfreebae-online', site: 'mfc', model_username: `${modelName}`, status: `online` })
           online_log.info(`${modelName} appears to be online`)
         }
         catch(e){
@@ -158,16 +158,8 @@ setInterval(function() {
 
 var status_inter = 1 * 60 * 1000;
 setInterval(function() {
-  request.post({
-    headers: {'content-type' : 'application/x-www-form-urlencoded'},
-    url: `http://${backend}:6902/mfc-status/${modelName}/status`,
-    body: "hi=heh"
-  },function(error, response, body){
-      console.log(body);
-      resp = JSON.parse(body);
-      status = resp['model_status'].toString();
-      var online_log = logger.child({ event: 'logging:myfreebae-online', site: 'mfc', model_username: `${modelName}`, status: `${status}` })
-      online_log.info(`${modelName} appears to be ${status}`)
-    });
+  getModelInfo( function(){
+    client_log.debug(`modelInfo function called`);
+  });  
 }, status_inter);
 //

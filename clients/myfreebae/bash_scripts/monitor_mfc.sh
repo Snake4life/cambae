@@ -8,5 +8,7 @@ do
   rm -rf master_list.txt
   mv temp_scrape2.txt master_list.txt
   rm -rf temp_scrape.txt
+  sleep 3
+  bash ./deploy.sh
   sleep 60
 done
