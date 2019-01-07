@@ -24,8 +24,9 @@ do
   OPATH="$FPATH/$SUSER-$i.jpg"
   TSTAMP="00:00:0$i"
   $FFLOC -loglevel panic -ss $TSTAMP -i $SPATH -frames:v 1 -f image2 $OPATH
+  URL="http://$BACKEND:5000"
   #sleep .5
-  OCURL=$(curl -s -F "file=@${OPATH}" 'http://watcher4.backend.chaturbae.tv:5000' | jq -r '.[]')
+  OCURL=$(curl -s -F "file=@${OPATH}" $URL | jq -r '.[]')
   sleep .5
   #OCURL=$(echo $OCURL \* 100|bc)
   TOTAL=$(expr $TOTAL + $OCURL)
