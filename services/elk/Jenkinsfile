@@ -26,7 +26,7 @@ stage ("Push Docker Image") {
 stage ('Deploy Docker Image') {
   node{
       dir('services/elk'){
-      sh "export RELEASE=build-${env.BUILD_NUMBER} && rancher up -s elk -u -d -c --force-recreate"
+      sh "export RELEASE=build-${env.BUILD_NUMBER} && rancher up -s elk-stack -u -d -c --force-recreate"
       }
   }
 }
