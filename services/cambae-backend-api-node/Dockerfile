@@ -129,6 +129,8 @@ RUN groupadd -r chaturbae && useradd -r -g chaturbae -G audio,video chaturbae
 COPY package.json .
 
 RUN npm install pino
+
+COPY streamlink-plugins/myfreecams.py /root/.config/streamlink/plugins/myfreecams.py
 # Bundle app source
 COPY . .
 
