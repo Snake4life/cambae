@@ -14,12 +14,19 @@ stage ('Build Docker Image') {
 }
 stage ("Push Docker Image") {
   node{
-      dir('myfreebae'){
+      dir('services/cambae-backend-api-node'){
       buildDate = sh(returnStdout: true, script: 'date -u +"%FT%H%MZ"').trim()
       docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-creds') {
           container.push("build-${env.BUILD_NUMBER} ")
           container.push('latest')
       }
     }
+  }
+}
+stage ('Deploy Docker Image') {
+  node{
+      dir('services/cambae-backend-api-node'){
+      sh "export RELEASE=build-${env.BUILD_NUMBER} && rancher up -s cambae-backend-api-node -u -d -c --force-recreate"
+      }
   }
 }
