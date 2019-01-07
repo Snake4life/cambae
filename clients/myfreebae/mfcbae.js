@@ -85,7 +85,7 @@ socket.on("mfcMessage", function(msg){
     var tipper = msg.Data.u[msg.Data.u.length-1]
     request.post({
       headers: {'content-type' : 'application/x-www-form-urlencoded'},
-      url: `${backend}:6902/mfc-status/${modelName}`,
+      url: `http://${backend}:6902/mfc-status/${modelName}`,
       body: "hi=heh"
     },function(error, response, body){
         console.log(body);
@@ -135,7 +135,7 @@ var firstNaked = 0;
 setInterval(function() {
   request.post({
     headers: {'content-type' : 'application/x-www-form-urlencoded'},
-    url: `http://${backend}:9000/mfc-status/${modelName}`,
+    url: `http://${backend}:6902/mfc-status/${modelName}`,
     body: "hi=heh"
   },function(error, response, body){
       console.log(body);
@@ -160,7 +160,7 @@ var status_inter = 1 * 10 * 1000;
 setInterval(function() {
   request.post({
     headers: {'content-type' : 'application/x-www-form-urlencoded'},
-    url: `http://10.10.1.30:6902/mfc-status/${modelName}/status`,
+    url: `http://${backend}:6902/mfc-status/${modelName}/status`,
     body: "hi=heh"
   },function(error, response, body){
       console.log(body);
