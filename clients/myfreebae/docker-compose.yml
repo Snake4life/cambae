@@ -1,0 +1,18 @@
+version: '2'
+services:
+  julianacandy:
+      #image: ''
+      build: .
+      labels:
+        app: myfreebae:client
+        io.rancher.container.hostname_override: container_name
+        io.rancher.container.pull_image: always
+      environment:
+        MODELNAME: "JulianaCandy"
+        SERVICE_IP: "watcher4.backend.chaturbae.tv"
+        SYSLOG_TAG: '{docker: "myfreebae-client"}'
+        LOGSTASH_FIELDS: "platform=docker,job=myfreebae-client,model_username=JulianaCandy"
+        DECODE_JSON_LOGS: "true"
+        DEBUG: "myfreebae:*"
+      volumes:
+        - '.:/usr/src/app'

@@ -1,0 +1,27 @@
+version: '2'
+services:
+  cambae-backend-api-node:
+      #image: ''
+      build: .
+      ports:
+        - "6902:6902"
+      depends_on:
+        - 'mongodb'
+      restart: always
+      #abels:
+      #  app: myfreebae:client
+      #  io.rancher.container.hostname_override: container_name
+      #  io.rancher.container.pull_image: always
+      environment:
+        SENDGRID_KEY: 1234
+        MASTER_KEY: kQe5bv7doIgLauIgL1DmnPeGr7cd5iS9
+        JWT_SECRET: q478FRlq1Dy37JjcO3ZWL9v3lzUllBIg
+  mongodb:
+    image: 'mongo'
+    ports:
+      - "27017:27017"
+    volumes:
+      - /Users/patrick/Documents/mongodb/data:/data/db
+
+      #volumes:
+      #  - '.:/usr/src/app'
