@@ -18,7 +18,7 @@ cat <<EOF >>docker-compose.template
       io.rancher.container.pull_image: always
     environment:
       MODELNAME: "##MODEL_NAME##"
-      SERVICE_IP: "watcher4.backend.chaturbae.tv"
+      BACKEND: "elk.backend.chaturbae.tv"
       SYSLOG_TAG: '{docker: "myfreebae-client"}'
       LOGSTASH_FIELDS: "platform=docker,job=myfreebae-client,model_username=##MODEL_NAME##"
       DECODE_JSON_LOGS: "true"

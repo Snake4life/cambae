@@ -6,6 +6,7 @@ var MFCMessage = require('MFCSocket').MFCMessage;
 var socket = new MFCSocket();
 var modelName = process.env.MODELNAME
 var debugTime = process.env.DEBUG_TIME
+var backend = process.env.BACKEND
 var modelID = ""
 var request = require("request");
 var exec = require('child_process').exec;
@@ -84,7 +85,7 @@ socket.on("mfcMessage", function(msg){
     var tipper = msg.Data.u[msg.Data.u.length-1]
     request.post({
       headers: {'content-type' : 'application/x-www-form-urlencoded'},
-      url: `http://10.10.1.30:9000/mfc-status/${modelName}`,
+      url: `${backend}:9000/mfc-status/${modelName}`,
       body: "hi=heh"
     },function(error, response, body){
         console.log(body);
@@ -134,7 +135,7 @@ var firstNaked = 0;
 setInterval(function() {
   request.post({
     headers: {'content-type' : 'application/x-www-form-urlencoded'},
-    url: `http://10.10.1.30:9000/mfc-status/${modelName}`,
+    url: `http://${backend}:9000/mfc-status/${modelName}`,
     body: "hi=heh"
   },function(error, response, body){
       console.log(body);
