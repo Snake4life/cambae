@@ -16,7 +16,7 @@ fi
 if [ ! -f $FPATH/streamlink.log ]; then
     touch $FPATH/streamlink.log
 fi
-$SLLOC --quiet --hls-duration 00:00:05 $SURL worst -o $SPATH > $FPATH/streamlink.log 2>&1
+$SLLOC --quiet --hls-duration 00:00:08 $SURL worst -o $SPATH > $FPATH/streamlink.log 2>&1
 TOTAL=0
 OLIST=""
 for i in $(seq 1 $END);

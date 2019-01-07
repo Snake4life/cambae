@@ -150,7 +150,7 @@ setInterval(function() {
         }
         else{
           naked_logger = logger.child({event: 'logging:myfreebae-naked', model_username: modelName, mfc_model_id: modelID, is_naked: 'false'}) //nsfw_score: nsfwScore, site: 'mfc', model_username: `${modelName}`});
-          naked_logger.info(`${modelName} appears to be naked`);
+          naked_logger.info(`${modelName} appears to NOT be naked`);
         }
       }
     });
