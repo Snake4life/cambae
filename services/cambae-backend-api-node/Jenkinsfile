@@ -1,6 +1,12 @@
 stage ('Git Clone latest repo') {
   node{
     deleteDir()
+    withCredentials([file(credentialsId: 'env', variable: 'envi')]) {
+      dir('services/cambae-backend-api-node'){
+       sh "cp \$envi .env"
+       sh "cat \$envi"
+     }
+    }
     git url: 'https://github.com/patrick-hudson/cambae.git'
 
   }
