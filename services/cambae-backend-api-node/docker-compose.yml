@@ -1,6 +1,6 @@
 version: '2'
 services:
-  cambae-backend-api-node:
+  api:
       image: 'patt1293/cambae-backend-api-node:${RELEASE}'
       #build: .
       ports:

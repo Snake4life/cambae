@@ -1,7 +1,7 @@
 version: '2'
 services:
   web:
-    build: .
+    immage: patt1293/nsfw_api:${RELEASE}
     ports:
       - "5000:5000"
     env_file: .env

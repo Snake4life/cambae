@@ -16,9 +16,9 @@ services:
       - source_port: 8081
         target_port: 8081
         service: chaturbae-irc-nudeapi/irc-worker
-      - source_port: 6901
-        target_port: 6901
-        service: cambae-backend-api/app
+      - source_port: 6902
+        target_port: 6902
+        service: cambae-backend-api-node/api
     health_check:
       port: 42
       interval: 2000

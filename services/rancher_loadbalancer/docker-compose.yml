@@ -7,4 +7,5 @@ services:
     - 5000
     - 8081
     - 6901
+    - 6902
     image: rancher/lb-service-haproxy:latest
