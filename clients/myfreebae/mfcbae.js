@@ -128,7 +128,7 @@ if(debugTime == "true"){
    var the_interval = 5 * 1000;
 }
 else {
-  var the_interval = 1 * 17 * 1000;
+  var the_interval = 5 * 60 * 1000;
 }
 var firstNaked = 0;
 
@@ -156,7 +156,7 @@ setInterval(function() {
     });
 }, the_interval);
 
-var status_inter = 1 * 10 * 1000;
+var status_inter = 1 * 60 * 1000;
 setInterval(function() {
   request.post({
     headers: {'content-type' : 'application/x-www-form-urlencoded'},
