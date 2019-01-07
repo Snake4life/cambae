@@ -1,6 +1,6 @@
 version: '2'
 services:
-  irc-nsfw-api-lb:
+  haproxy:
     labels:
       io.rancher.scheduler.global: 'true'
     ports:

@@ -1,6 +1,6 @@
 version: '2'
 services:
-  irc-nsfw-api-lb:
+  haproxy:
     lb_config:
       config: |-
           global
