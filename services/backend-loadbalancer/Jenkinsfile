@@ -1,3 +1,10 @@
+stage ('Git Clone latest repo') {
+  node{
+    deleteDir()
+    git url: 'https://github.com/patrick-hudson/cambae.git'
+
+  }
+}
 stage ('Deploy Backend Load Balancer') {
   node{
       dir('services/backend-loadbalancer'){
