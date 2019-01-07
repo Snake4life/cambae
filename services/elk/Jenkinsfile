@@ -1,0 +1,32 @@
+stage ('Git Clone latest repo') {
+  node{
+    deleteDir()
+    git url: 'https://github.com/patrick-hudson/cambae.git'
+
+  }
+}
+stage ('Build Docker Image') {
+  node{
+      dir('services/elk'){
+      container = docker.build('patt1293/elk', ".")
+      }
+  }
+}
+stage ("Push Docker Image") {
+  node{
+      dir('services/elk'){
+      buildDate = sh(returnStdout: true, script: 'date -u +"%FT%H%MZ"').trim()
+      docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-creds') {
+          container.push("build-${env.BUILD_NUMBER} ")
+          container.push('latest')
+      }
+    }
+  }
+}
+stage ('Deploy Docker Image') {
+  node{
+      dir('services/elk'){
+      sh "export RELEASE=build-${env.BUILD_NUMBER} && rancher up -s elk -u -d -c --force-recreate"
+      }
+  }
+}

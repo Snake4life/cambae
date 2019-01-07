@@ -6,8 +6,8 @@ services:
     #image: bekt/logspout-logstash
     environment:
       DEBUG: 'true'
-      ROUTE_URIS: 'logstash+tcp://watcher4.backend.chaturbae.tv:12202?filter.name=*chaturbae*'
-    image: patt1293/logspout:latest
+      ROUTE_URIS: 'logstash+tcp://watcher4.backend.chaturbae.tv:12202?filter.name=*bae*'
+    image: patt1293/logspout:${RELEASE}
     #environment:
     #  ROUTE_URIS: "logstash://107.155.97.166:5001"
     volumes:

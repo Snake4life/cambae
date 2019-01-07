@@ -8,6 +8,8 @@ services:
       depends_on:
         - 'mongodb'
       restart: always
+      labels:
+        io.rancher.scheduler.affinity:host_label: service=elk
       #abels:
       #  app: myfreebae:client
       #  io.rancher.container.hostname_override: container_name
@@ -18,6 +20,8 @@ services:
         JWT_SECRET: q478FRlq1Dy37JjcO3ZWL9v3lzUllBIg
   mongodb:
     image: 'mongo'
+    labels:
+      io.rancher.scheduler.affinity:host_label: service=elk
     ports:
       - "27017:27017"
     volumes:
