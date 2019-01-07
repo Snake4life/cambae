@@ -149,6 +149,6 @@ ENTRYPOINT ["dumb-init", "--"]
 #CMD [ "node", "cb_client.js" ]
 #RUN screen -dmS super /usr/bin/supervisord -n
 # Install app dependencies
-
+RUN mkdir ./src/services/bash_scripts/models
 CMD bash entrypoint.sh
 #CMD tail -f /dev/null
