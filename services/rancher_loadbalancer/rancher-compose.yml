@@ -12,10 +12,7 @@ services:
       port_rules:
       - source_port: 5000
         target_port: 5000
-        service: chaturbae-irc-nudeapi/nsfw-api
-      - source_port: 8081
-        target_port: 8081
-        service: chaturbae-irc-nudeapi/irc-worker
+        service: open-nsfw/api
       - source_port: 6902
         target_port: 6902
         service: cambae-backend-api-node/api

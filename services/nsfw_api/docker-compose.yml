@@ -1,11 +1,11 @@
 version: '2'
 services:
-  nsfw-api:
+  api:
     image: patt1293/nsfw_api:${RELEASE}
     environment:
       PORT: '5000'
     ports:
-    - 62979:5000/tcp
+    - 5000/tcp
     labels:
       io.rancher.container.pull_image: always
       io.rancher.container.hostname_override: container_name
