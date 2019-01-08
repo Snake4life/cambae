@@ -39,10 +39,11 @@ do
   else
     OLIST="$OLIST, $OST"
   fi
+  rm -rf "$OPATH"
 done
 OSTRING="{\"status\": \"online\", \"nsfwAvg\": \"$TOTALAVG\", \"nsfwScores\": [$OLIST]}"
 if [ -f $SPATH ]; then
     rm -rf $SPATH
-    rm -rf "$FPATH/$SUSER-$TIMESTAMP-*.jpg"
+
 fi
 echo $OSTRING
