@@ -5,7 +5,7 @@ FPATH=$4
 SPATH="$FPATH/$SUSER-$TIMESTAMP.mkv"
 SLLOC=`which streamlink`
 FFLOC=`which ffmpeg`
-END=8
+END=4
 
 #echo $(pwd)
 #rm -f "$SUSER-*.jpg"
@@ -17,7 +17,7 @@ fi
 if [ ! -f $FPATH/streamlink.log ]; then
     touch $FPATH/streamlink.log
 fi
-$SLLOC --quiet --hls-duration 00:00:08 $SURL worst -o $SPATH > $FPATH/streamlink.log 2>&1
+$SLLOC --quiet --hls-duration 00:00:05 $SURL worst -o $SPATH > $FPATH/streamlink.log 2>&1
 TOTAL=0
 OLIST=""
 
