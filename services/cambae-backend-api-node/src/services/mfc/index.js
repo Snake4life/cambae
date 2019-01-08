@@ -19,6 +19,7 @@ function getNude (model_name, callback){
     // Do async job
     child.stdout.on('data', (data) => {
         end = data.toString()
+        console.log(end)
     })
     child.on('exit', () => {
       callback(end);
