@@ -16,6 +16,7 @@ cat <<EOF >>docker-compose.template
       app: myfreebae:client
       io.rancher.container.hostname_override: container_name
       io.rancher.container.pull_image: always
+      io.rancher.scheduler.affinity:host_label: service=client
     environment:
       MODELNAME: "##MODEL_NAME##"
       BACKEND: "elk.backend.chaturbae.tv"
