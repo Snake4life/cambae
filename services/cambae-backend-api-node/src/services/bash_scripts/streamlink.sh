@@ -5,7 +5,7 @@ FPATH=$4
 SLLOC=`which streamlink`
 FFLOC=`which ffmpeg`
 END=4
-
+TIMESTAMP=$(date +%s)
 #echo $(pwd)
 #rm -f "$SUSER-*.jpg"
 #echo "$SLLOC --quiet --hls-duration 00:00:15 $SURL\" worst -o $SPATH" >> fuckmeplswhywontthiswork.txt
@@ -19,9 +19,10 @@ fi
 $SLLOC --quiet --hls-duration 00:00:08 $SURL worst -o $SPATH > $FPATH/streamlink.log 2>&1
 TOTAL=0
 OLIST=""
+
 for i in $(seq 1 $END);
 do
-  OPATH="$FPATH/$SUSER-$i.jpg"
+  OPATH="$FPATH/$SUSER-$TIMESTAMP-$i.jpg"
   TSTAMP="00:00:0$i"
   $FFLOC -loglevel panic -ss $TSTAMP -i $SPATH -frames:v 1 -f image2 $OPATH
   URL="http://elk.backend.chaturbae.tv:5000"
