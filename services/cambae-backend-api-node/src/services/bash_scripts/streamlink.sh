@@ -5,7 +5,7 @@ FPATH=$4
 SPATH="$FPATH/$SUSER-$TIMESTAMP.mkv"
 SLLOC=`which streamlink`
 FFLOC=`which ffmpeg`
-END=4
+END=8
 
 #echo $(pwd)
 #rm -f "$SUSER-*.jpg"
@@ -27,9 +27,12 @@ do
   TSTAMP="00:00:0$i"
   $FFLOC -loglevel panic -ss $TSTAMP -i $SPATH -frames:v 1 -f image2 $OPATH
   URL="http://elk.backend.chaturbae.tv:5000"
-  #sleep .5
+  sleep .5
   OCURL=$(curl -s -F "file=@${OPATH}" $URL | jq -r '.[]')
   sleep .5
+  if [[ "$OCURL" == "" ]]; then
+    OCURL=0
+  fi
   #OCURL=$(echo $OCURL \* 100|bc)
   TOTAL=$(expr $TOTAL + $OCURL)
   TOTALAVG=$(expr $TOTAL / $END)
