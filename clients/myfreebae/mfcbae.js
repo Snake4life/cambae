@@ -90,11 +90,11 @@ socket.on("mfcMessage", function(msg){
         mfc_total_dollars = tip_amount * .085483
         if(!isNaN(nsfwScore)){
           if(nsfwScore > 51){
-            naked_logger = logger.child({event: 'logging:myfreebae-tip', tipper: tipper, mfc_model_id: modelID, tip_amount: parseInt(msg.Data.tokens), usd_amount: converted_dollar, mfc_usd_amount: mfc_total_dollars, is_naked: 'true', nsfw_score: nsfwScore, site: 'mfc', model_username: `${modelName}`});
+            var naked_logger = logger.child({event: 'logging:myfreebae-tip', tipper: tipper, mfc_model_id: modelID, tip_amount: parseInt(msg.Data.tokens), usd_amount: converted_dollar, mfc_usd_amount: mfc_total_dollars, is_naked: 'true', nsfw_score: nsfwScore, site: 'mfc', model_username: `${modelName}`});
             naked_logger.info(`Tip Amount: ${tip_amount} - Converted to Dollars: ${converted_dollar} - ${modelName} appears to be naked`);
           }
           else{
-            not_naked_logger = logger.child({event: 'logging:myfreebae-tip', tipper: tipper, mfc_model_id: modelID, tip_amount: parseInt(msg.Data.tokens), usd_amount: converted_dollar, mfc_usd_amount: mfc_total_dollars, is_naked: 'false', nsfw_score: nsfwScore, site: 'mfc', model_username: `${modelName}` });
+            var not_naked_logger = logger.child({event: 'logging:myfreebae-tip', tipper: tipper, mfc_model_id: modelID, tip_amount: parseInt(msg.Data.tokens), usd_amount: converted_dollar, mfc_usd_amount: mfc_total_dollars, is_naked: 'false', nsfw_score: nsfwScore, site: 'mfc', model_username: `${modelName}` });
             not_naked_logger.info(`Tip Amount: ${tip_amount} - Converted to Dollars: ${converted_dollar} - ${modelName} does not appear to be naked`);
           }
         }
@@ -123,29 +123,29 @@ else {
 }
 var firstNaked = 0;
 
-setInterval(function() {
-  request.post({
-    headers: {'content-type' : 'application/x-www-form-urlencoded'},
-    url: `http://${backend}:6902/mfc-status/${modelName}`,
-    body: "hi=heh"
-  },function(error, response, body){
-      console.log(body);
-      resp = JSON.parse(body);
-      score = resp['nsfwAvg'].toString();
-      nsfwScore = parseInt(score);
-      if(!isNaN(nsfwScore)){
-        ai_log.info(`AI Detected a NSFW Score of ${nsfwScore}%`);
-        if(nsfwScore > 51){
-          var naked_interval_logger = logger.child({event: 'logging:myfreebae-naked', model_username: modelName, mfc_model_id: modelID, is_naked: 'true'}) //nsfw_score: nsfwScore, site: 'mfc', model_username: `${modelName}`});
-          naked_interval_logger.info(`${modelName} appears to be naked`);
-        }
-        else{
-          var naked_interval_logger = logger.child({event: 'logging:myfreebae-naked', model_username: modelName, mfc_model_id: modelID, is_naked: 'false'}) //nsfw_score: nsfwScore, site: 'mfc', model_username: `${modelName}`});
-          naked_interval_logger.info(`${modelName} appears to NOT be naked`);
-        }
-      }
-    });
-}, the_interval);
+ //setInterval(function() {
+//  request.post({
+//    headers: {'content-type' : 'application/x-www-form-urlencoded'},
+//    url: `http://${backend}:6902/mfc-status/${modelName}`,
+//    body: "hi=heh"
+//  },function(error, response, body){
+//      console.log(body);
+//      resp = JSON.parse(body);
+//      score = resp['nsfwAvg'].toString();
+//      nsfwScore = parseInt(score);
+//      if(!isNaN(nsfwScore)){
+//        ai_log.info(`AI Detected a NSFW Score of ${nsfwScore}%`);
+//        if(nsfwScore > 51){
+//          var naked_interval_logger = logger.child({event: 'logging:myfreebae-naked', model_username: modelName, mfc_model_id: modelID, //is_naked: 'true'}) //nsfw_score: nsfwScore, site: 'mfc', model_username: `${modelName}`});
+//          naked_interval_logger.info(`${modelName} appears to be naked`);
+//        }
+//        else{
+//          var naked_interval_logger = logger.child({event: 'logging:myfreebae-naked', model_username: modelName, mfc_model_id: modelID, //is_naked: 'false'}) //nsfw_score: nsfwScore, site: 'mfc', model_username: `${modelName}`});
+//          naked_interval_logger.info(`${modelName} appears to NOT be naked`);
+//        }
+//      }
+//    });
+//}, the_interval);
 
 var status_inter = 1 * 60 * 1000;
 setInterval(function() {
