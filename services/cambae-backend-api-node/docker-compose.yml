@@ -8,8 +8,8 @@ services:
       depends_on:
         - 'mongodb'
       restart: always
-    labels:
-      io.rancher.scheduler.affinity:host_label: service=watcher
+      labels:
+        io.rancher.scheduler.affinity:host_label: service=watcher
       #abels:
       #  app: myfreebae:client
       #  io.rancher.container.hostname_override: container_name
