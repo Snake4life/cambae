@@ -3,8 +3,6 @@ services:
   api:
       image: 'patt1293/cambae-backend-api-node:${RELEASE}'
       #build: .
-      ports:
-        - "6902"
       depends_on:
         - 'mongodb'
       restart: always
