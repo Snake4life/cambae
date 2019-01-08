@@ -136,12 +136,12 @@ setInterval(function() {
       if(!isNaN(nsfwScore)){
         ai_log.info(`AI Detected a NSFW Score of ${nsfwScore}%`);
         if(nsfwScore > 51){
-          naked_logger = logger.child({event: 'logging:myfreebae-naked', model_username: modelName, mfc_model_id: modelID, is_naked: 'true'}) //nsfw_score: nsfwScore, site: 'mfc', model_username: `${modelName}`});
-          naked_logger.info(`${modelName} appears to be naked`);
+          var naked_interval_logger = logger.child({event: 'logging:myfreebae-naked', model_username: modelName, mfc_model_id: modelID, is_naked: 'true'}) //nsfw_score: nsfwScore, site: 'mfc', model_username: `${modelName}`});
+          naked_interval_logger.info(`${modelName} appears to be naked`);
         }
         else{
-          naked_logger = logger.child({event: 'logging:myfreebae-naked', model_username: modelName, mfc_model_id: modelID, is_naked: 'false'}) //nsfw_score: nsfwScore, site: 'mfc', model_username: `${modelName}`});
-          naked_logger.info(`${modelName} appears to NOT be naked`);
+          var naked_interval_logger = logger.child({event: 'logging:myfreebae-naked', model_username: modelName, mfc_model_id: modelID, is_naked: 'false'}) //nsfw_score: nsfwScore, site: 'mfc', model_username: `${modelName}`});
+          naked_interval_logger.info(`${modelName} appears to NOT be naked`);
         }
       }
     });
