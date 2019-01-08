@@ -1,5 +1,0 @@
-version: '2'
-services:
-  api:
-    scale: 15
-    start_on_create: true
