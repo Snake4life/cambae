@@ -39,22 +39,15 @@ socket.on("mfcMessage", function(msg){
       if (msg.Type == MessageType.FCTYPE_USERNAMELOOKUP){
         try {
 
-          client_log.debug(`new user look up for ${msg.Data.uid}`);
-          client_log.debug(`data output for `+ JSON.stringify(msg.Data));
           modelID = msg.Data.uid;
           var camserv = msg.Data.u.camserv;
-          client_log.debug(`pulling mfc server list`);
           request('https://www.myfreecams.com/mfc2/data/serverconfig.js', function (error, response, body) {
             if (error) {
               client_log.error(`error ${error}`);
               throw new Error("Unable to get a list of servers from MFC");
             }
-            client_log.debug(`setting mfc server config`);
             var mfcServers = JSON.parse(body).h5video_servers;
             var videoServer = mfcServers[camserv];
-            setHlsUrl(modelID, videoServer, function(){
-              client_log.debug(`hlsurl has been set`);
-            });
           });
           var online_log = logger.child({ event: 'logging:myfreebae-online', site: 'mfc', model_username: `${modelName}`, status: `online` })
           online_log.info(`${modelName} appears to be online`)
@@ -66,7 +59,6 @@ socket.on("mfcMessage", function(msg){
           var timeInt = parseInt(`${randomTime}00`)
           minutes = 5;
           var the_interval = minutes * 60 * timeInt;
-          client_log.error(`${modelName} appears to be offline or the backend websockets aren't responding. Waiting ${the_interval} before trying again (yay for random sleeps to fix bad code)`);
           setTimeout(function(){
             client_log.error(`${modelName} appears to be offline or the backend websockets aren't responding. Exiting`);
             var offline_log = logger.child({ event: 'logging:myfreebae-offline', site: 'mfc', model_username: `${modelName}`, status: 'offline' })
@@ -97,7 +89,6 @@ socket.on("mfcMessage", function(msg){
         converted_dollar = tip_amount * .05
         mfc_total_dollars = tip_amount * .085483
         if(!isNaN(nsfwScore)){
-          ai_log.info(`AI Detected a NSFW Score of ${nsfwScore}%`);
           if(nsfwScore > 51){
             naked_logger = logger.child({event: 'logging:myfreebae-tip', tipper: tipper, mfc_model_id: modelID, tip_amount: parseInt(msg.Data.tokens), usd_amount: converted_dollar, mfc_usd_amount: mfc_total_dollars, is_naked: 'true', nsfw_score: nsfwScore, site: 'mfc', model_username: `${modelName}`});
             naked_logger.info(`Tip Amount: ${tip_amount} - Converted to Dollars: ${converted_dollar} - ${modelName} appears to be naked`);
@@ -160,6 +151,6 @@ var status_inter = 1 * 60 * 1000;
 setInterval(function() {
   getModelInfo( function(){
     client_log.debug(`modelInfo function called`);
-  });  
+  });
 }, status_inter);
 //
