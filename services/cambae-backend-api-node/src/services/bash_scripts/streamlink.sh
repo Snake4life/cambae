@@ -1,17 +1,18 @@
-SPATH=$1
+TIMESTAMP=$(date +%s)
 SURL=$2
 SUSER=$3
 FPATH=$4
+SPATH="$FPATH/$SUSER-$TIMESTAMP.mkv"
 SLLOC=`which streamlink`
 FFLOC=`which ffmpeg`
 END=4
-TIMESTAMP=$(date +%s)
+
 #echo $(pwd)
 #rm -f "$SUSER-*.jpg"
 #echo "$SLLOC --quiet --hls-duration 00:00:15 $SURL\" worst -o $SPATH" >> fuckmeplswhywontthiswork.txt
 if [ -f $SPATH ]; then
     rm -rf $SPATH
-    rm -rf $FPATH/*.jpg
+    rm -rf "$FPATH/$SUSER-$TIMESTAMP-*.jpg"
 fi
 if [ ! -f $FPATH/streamlink.log ]; then
     touch $FPATH/streamlink.log
@@ -42,6 +43,6 @@ done
 OSTRING="{\"status\": \"online\", \"nsfwAvg\": \"$TOTALAVG\", \"nsfwScores\": [$OLIST]}"
 if [ -f $SPATH ]; then
     rm -rf $SPATH
-    rm -rf $FPATH/*.jpg
+    rm -rf "$FPATH/$SUSER-$TIMESTAMP-*.jpg"
 fi
 echo $OSTRING
