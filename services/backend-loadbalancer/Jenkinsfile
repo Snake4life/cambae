@@ -8,7 +8,7 @@ stage ('Git Clone latest repo') {
 stage ('Deploy Backend Load Balancer') {
   node{
       dir('services/backend-loadbalancer'){
-      sh "export RELEASE=build-${env.BUILD_NUMBER} && rancher up -s backend-loadbalancer -u -d -c --force-recreate"
+      sh "export RELEASE=build-${env.BUILD_NUMBER} && rancher up -s backend-loadbalancer -u -d -c --batch-size 10 --force-recreate"
       }
   }
 }
