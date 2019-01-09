@@ -30,8 +30,8 @@ EOF
 cp master_list.txt pages
 echo "h1"
 cd pages
-gsplit -l 100 --numeric-suffixes --additional-suffix='.txt' 'master_list.txt' 'page'
-lastP=$(ls | gsort -Vr | head -n 1 | sed 's|page\(.*\)\.txt|\1|g')
+split -l 100 --numeric-suffixes --additional-suffix='.txt' 'master_list.txt' 'page'
+lastP=$(ls | sort -Vr | head -n 1 | sed 's|page\(.*\)\.txt|\1|g')
 rm -rf master_list.txt
 cd ../
 for ((i=0;i<=$lastP;i++)); do
