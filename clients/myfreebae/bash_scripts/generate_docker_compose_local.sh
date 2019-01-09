@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 FILENAME=$1
 #cb-client:
 #  image: patt1293/chaturbae-client:latest
@@ -9,10 +10,10 @@ FILENAME=$1
 #    SERVICE_IP: "172.26.5.97"
 #    DEBUG: "chaturbae:*"
 mkdir -p pages
-rm -rf docker-compose.template
+#rm -rf docker-compose.template > /dev/null 2>&1
 cat <<EOF >>docker-compose.template
 ##CLEAN_USERNAME##:
-    image: 'patt1293/myfreebae:build-101'
+    image: 'patt1293/myfreebae:build-102'
     labels:
       app: myfreebae:client
       io.rancher.container.hostname_override: container_name
@@ -28,13 +29,14 @@ cat <<EOF >>docker-compose.template
 
 EOF
 cp master_list.txt pages
-echo "h1"
 cd pages
 split -l 100 --numeric-suffixes --additional-suffix='.txt' 'master_list.txt' 'page'
 lastP=$(ls | sort -Vr | head -n 1 | sed 's|page\(.*\)\.txt|\1|g')
-rm -rf master_list.txt
+#if [ $lastP -eq '' ]l then
+#
+#rm -rf master_list.txt
 cd ../
-for ((i=7;i<=$lastP;i++)); do
+for ((i=0;i<=$lastP;i++)); do
   if [ $i -gt 9 ]; then
     PPAGE="page$i.txt"
   else
@@ -42,7 +44,7 @@ for ((i=7;i<=$lastP;i++)); do
   fi
   dOut=""
   while read p; do
-    echo $p
+    #echo $p
       #nameMinusWorker=$(echo $p | sed 's|-worker||g')
       nameReplaceDash=$(echo $p | sed -e 's|_||g' -e 's|--|-|g' -e 's|^-||g' -e 's|^_||' -e 's|-$||g' -e 's|$_||g' -e 's|_||g')
       toLower=$(echo $nameReplaceDash | awk '{print tolower($0)}')
@@ -57,4 +59,4 @@ done
 
 #rm -f master_list.txt
 rm -rf docker-compose.template
-rm -rf pages/*
+rm -rf pages/* > /dev/null

@@ -10,5 +10,5 @@ do
   rm -rf temp_scrape.txt
   sleep 3
   bash ./deploy.sh
-  sleep 60
+  sleep 180
 done
