@@ -32,7 +32,7 @@ stage ("Push Docker Image") {
 stage ('Deploy Docker Image') {
   node{
       dir('services/open-nsfw'){
-      sh "export RELEASE=build-${env.BUILD_NUMBER} && rancher up -s open-nsfw -u -d -c --force-recreate"
+      sh "export RELEASE=build-${env.BUILD_NUMBER} && rancher up -s open-nsfw -u -d -c --batch-size 10 --force-recreate"
       }
   }
 }
