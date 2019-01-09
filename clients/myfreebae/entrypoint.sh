@@ -16,5 +16,5 @@
 #sleep 3
 #node generate_log.js init "complete"
 #tail -f /var/log/chaturbae/cb_client-output.log
-node mfcbae.js
+nodemon mfcbae.js
 #tail -f /dev/null

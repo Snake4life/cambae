@@ -128,7 +128,7 @@ COPY . .
 
 RUN npm install
 
-RUN npm install -g typescript
+RUN npm install -g typescript nodemon
 
 #&& mkdir -p /home/blessuser/Downloads
 #&& chown -R blessuser:blessuser /home/blessuser \

@@ -1,0 +1,5 @@
+#!/bin/bash
+USER=$1
+export MNAME=$USER
+echo $MNAME
+docker-compose -f docker-compose.yml up --remove-orphan
