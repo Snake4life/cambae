@@ -2,7 +2,7 @@ version: '2'
 services:
   elk:
     labels:
-      io.rancher.scheduler.affinity:host_label: service=elk
+      io.rancher.scheduler.affinity:host_label: has_elk=true
     image: patt1293/elk:${RELEASE}
     ports:
       - "5601:5601"
