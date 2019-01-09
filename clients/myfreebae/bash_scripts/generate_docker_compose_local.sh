@@ -51,9 +51,7 @@ for ((i=0;i<=$lastP;i++)); do
       dOut="$dOut\n  $dTemplate"
   done < "pages/$PPAGE"
       printf "version: '2'\nservices:$dOut" > docker-compose-generate.yml
-      echo "waiting to simulate rancher"
       rancher up -f docker-compose-generate.yml -s myfreebae-stack -u -d -c
-      sleep 10
 
 done
 
