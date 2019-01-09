@@ -2,7 +2,7 @@ version: '2'
 services:
   haproxy:
     labels:
-      io.rancher.scheduler.global: 'true'
+      io.rancher.scheduler.affinity:host_label: service=watcher
     ports:
     - 5000
     - 8081

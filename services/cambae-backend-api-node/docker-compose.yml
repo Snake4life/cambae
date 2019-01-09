@@ -27,3 +27,13 @@ services:
 
       #volumes:
       #  - '.:/usr/src/app'
+  mariadb:
+    image: mariadb:10.2
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT}
+      MYSQL_DATABASE: cattle
+      MYSQL_USER: cattle
+      MYSQL_PASSWORD: ${CATTLE_PASS}
+    restart: on-failure
+    volumes:
+     - /home/mariadb:/var/lib/mysql
