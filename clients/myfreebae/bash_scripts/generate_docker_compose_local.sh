@@ -13,7 +13,7 @@ mkdir -p pages
 #rm -rf docker-compose.template > /dev/null 2>&1
 cat <<EOF >>docker-compose.template
 ##CLEAN_USERNAME##:
-    image: 'patt1293/myfreebae:build-102'
+    image: 'patt1293/myfreebae:build-103'
     labels:
       app: myfreebae:client
       io.rancher.container.hostname_override: container_name
