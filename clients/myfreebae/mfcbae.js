@@ -1,6 +1,7 @@
 var MFCSocket = require("MFCSocket");
 var MessageType = require('MFCSocket').MFCMessageType;
 var JoinChannelMessage = require("MFCSocket").JoinChannelMessage;
+var LeaveChannelMessage = require("MFCSocket").LeaveChannelMessage
 var logger = require('pino')({ level: "debug" })
 var MFCMessage = require('MFCSocket').MFCMessage;
 var socket = new MFCSocket();
@@ -14,11 +15,15 @@ var spawn = require('child_process').spawn;
 var client_log = logger.child({ event: 'logging:myfreebae-client' , site: 'mfc', model_username: `${modelName}` })
 var nudity_log = logger.child({ event: 'logging:myfreebae-nude', site: 'mfc', model_username: `${modelName}` })
 var ai_log = logger.child({ event: 'logging:myfreebae-ai', site: 'mfc', model_username: `${modelName}` })
-
+var sessoinInfo = ""
 var hlsURL = ""
+var cOnline = false
 socket.on("loggedIn", function(u){
   getModelInfo( function(){
-    client_log.debug(`modelInfo function called`);
+    //client_log.debug(`modelInfo function called`);
+  });
+  setSessionInfo(u, function(){
+
   });
   var command = `bash mfc_id.sh ${modelName}`
   var child = exec(command, function(error, stdout, stderr){
@@ -29,8 +34,15 @@ socket.on("loggedIn", function(u){
 socket.on("mfcMessage", function(msg){
     if (msg.Type == MessageType.FCTYPE_CMESG){
         try {
-          var myfreebae_message_logger = logger.child({ event: 'logging:myfreebae-message', mfc_chat_username: msg.Data.nm, mfc_model: modelName, mfc_model_id: modelID, site: 'mfc', model_username: `${modelName}`})
-          myfreebae_message_logger.info(decodeURIComponent(msg.Data.msg))
+          if(msg.Data.nm == modelName || msg.Data.nm == "FCServer"){
+            var myfreebae_message_logger = logger.child({ event: 'logging:myfreebae-message', mfc_chat_username: msg.Data.nm, mfc_model: modelName, mfc_model_id: modelID, site: 'mfc', model_username: `${modelName}`, server_chat: 'true'})
+            myfreebae_message_logger.info(decodeURIComponent(msg.Data.msg))
+          }
+          else{
+            var myfreebae_message_logger = logger.child({ event: 'logging:myfreebae-message', mfc_chat_username: msg.Data.nm, mfc_model: modelName, mfc_model_id: modelID, site: 'mfc', model_username: `${modelName}`, server_chat: 'false'})
+            myfreebae_message_logger.info(decodeURIComponent(msg.Data.msg))
+          }
+
         }
         catch(e){
 
@@ -50,7 +62,15 @@ socket.on("mfcMessage", function(msg){
             var videoServer = mfcServers[camserv];
           });
           var online_log = logger.child({ event: 'logging:myfreebae-online', site: 'mfc', model_username: `${modelName}`, status: `online` })
-          online_log.info(`${modelName} appears to be online`)
+          if(cOnline == false){
+            online_log.info(`${modelName} appears to be online`)
+            client_log.info(JSON.stringify(sessoinInfo))
+            cOnline = true
+          }
+          else{
+            client_log.info(`attmpted to log online status, but it was already logged before. Skipping`)
+          }
+
         }
         catch(e){
           var min=10;
@@ -60,9 +80,18 @@ socket.on("mfcMessage", function(msg){
           minutes = 5;
           var the_interval = minutes * 60 * timeInt;
           setTimeout(function(){
-            client_log.error(`${modelName} appears to be offline or the backend websockets aren't responding. Exiting`);
+            if(cOnline == true){
+              client_log.error(`${modelName} appears to be offline or the backend websockets aren't responding. Exiting`);
+              cOnline = false
+            }
+            else{
+              client_log.info(`attmpted to log offline status, but it was already logged before. Skipping`)
+            }
+            var command = `bash mfc_id.sh ${modelName}`
+            var child = exec(command, function(error, stdout, stderr){
+              socket.send(new LeaveChannelMessage(sessoinInfo.SessionId, parseInt(modelID)));
+            });
             var offline_log = logger.child({ event: 'logging:myfreebae-offline', site: 'mfc', model_username: `${modelName}`, status: 'offline' })
-            offline_log.info(`${modelName} appears to be offline`)
             process.exit(1);
           }, the_interval);
 
@@ -102,10 +131,11 @@ socket.on("mfcMessage", function(msg){
   }
 });
 
-function setHlsUrl(modelID, videoServer, callback){
-    var publicChannelId = 100000000 + modelID;
-    hlsURL = `https://${videoServer}.myfreecams.com/NxServer/ngrp:mfc_${publicChannelId}.f4v_desktop/manifest.mpd`
-  callback();
+function setSessionInfo(u, callback){
+    //client_log.info(`${u}`)
+    sessoinInfo = u
+    client_log.info(JSON.stringify(sessoinInfo))
+    callback();
 
 }
 function getModelInfo(callback){
@@ -114,43 +144,10 @@ function getModelInfo(callback){
 }
 
 
-minutes = 5;
-if(debugTime == "true"){
-   var the_interval = 5 * 1000;
-}
-else {
-  var the_interval = 5 * 60 * 1000;
-}
-var firstNaked = 0;
-
- //setInterval(function() {
-//  request.post({
-//    headers: {'content-type' : 'application/x-www-form-urlencoded'},
-//    url: `http://${backend}:6902/mfc-status/${modelName}`,
-//    body: "hi=heh"
-//  },function(error, response, body){
-//      console.log(body);
-//      resp = JSON.parse(body);
-//      score = resp['nsfwAvg'].toString();
-//      nsfwScore = parseInt(score);
-//      if(!isNaN(nsfwScore)){
-//        ai_log.info(`AI Detected a NSFW Score of ${nsfwScore}%`);
-//        if(nsfwScore > 51){
-//          var naked_interval_logger = logger.child({event: 'logging:myfreebae-naked', model_username: modelName, mfc_model_id: modelID, //is_naked: 'true'}) //nsfw_score: nsfwScore, site: 'mfc', model_username: `${modelName}`});
-//          naked_interval_logger.info(`${modelName} appears to be naked`);
-//        }
-//        else{
-//          var naked_interval_logger = logger.child({event: 'logging:myfreebae-naked', model_username: modelName, mfc_model_id: modelID, //is_naked: 'false'}) //nsfw_score: nsfwScore, site: 'mfc', model_username: `${modelName}`});
-//          naked_interval_logger.info(`${modelName} appears to NOT be naked`);
-//        }
-//      }
-//    });
-//}, the_interval);
-
 var status_inter = 1 * 60 * 1000;
 setInterval(function() {
   getModelInfo( function(){
-    client_log.debug(`modelInfo function called`);
+    //client_log.debug(`modelInfo function called`);
   });
 }, status_inter);
 //

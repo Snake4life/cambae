@@ -1,6 +1,6 @@
 version: '2'
 services:
-  julianacandy:
+  emilypreponxo:
       #image: ''
       build: .
       labels:
@@ -9,10 +9,10 @@ services:
         io.rancher.container.pull_image: always
         io.rancher.scheduler.affinity:host_label: service=client
       environment:
-        MODELNAME: "JulianaCandy"
+        MODELNAME: "EmilyPreponXO"
         BACKEND: "elk.backend.chaturbae.tv"
         SYSLOG_TAG: '{docker: "myfreebae-client"}'
-        LOGSTASH_FIELDS: "platform=docker,job=myfreebae-client,model_username=JulianaCandy"
+        LOGSTASH_FIELDS: "platform=docker,job=myfreebae-client,model_username=EmilyPreponXO"
         DECODE_JSON_LOGS: "true"
         DEBUG: "myfreebae:*"
       volumes:

@@ -12,7 +12,7 @@ mkdir -p pages
 rm -rf docker-compose.template
 cat <<EOF >>docker-compose.template
 ##CLEAN_USERNAME##:
-    image: 'patt1293/myfreebae:build-100'
+    image: 'patt1293/myfreebae:build-101'
     labels:
       app: myfreebae:client
       io.rancher.container.hostname_override: container_name
@@ -34,7 +34,7 @@ split -l 100 --numeric-suffixes --additional-suffix='.txt' 'master_list.txt' 'pa
 lastP=$(ls | sort -Vr | head -n 1 | sed 's|page\(.*\)\.txt|\1|g')
 rm -rf master_list.txt
 cd ../
-for ((i=0;i<=$lastP;i++)); do
+for ((i=7;i<=$lastP;i++)); do
   if [ $i -gt 9 ]; then
     PPAGE="page$i.txt"
   else

@@ -1,7 +1,7 @@
 #!/bin/bash
-RANDOMWAIT=$((1 + RANDOM % 30))
-node generate_log.js init "yay for using sleeps to fix bad code! sleeping for ${RANDOMWAIT} seconds"
-sleep $RANDOMWAIT
+#RANDOMWAIT=$((1 + RANDOM % 30))
+#node generate_log.js init "yay for using sleeps to fix bad code! sleeping for ${RANDOMWAIT} seconds"
+#sleep $RANDOMWAIT
 #node generate_log.js init "npm install deps started"
 #npm install >> /var/log/myfreebae/npm_install.log 2>&1
 #node generate_log.js init "npm install deps complete"
