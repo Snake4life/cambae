@@ -348,14 +348,20 @@ function checkIfOnline(data, callback) {
 }
 
 function roomMetaData(d, callback) {
-    roomCount = !roomCount ? -1 : d.Data.m.rc;
-    roomRank = !roomRank ? -1 : d.Data.m.rank;
-    cModelAge = !cModelAge ? 'unknown' : d.Data.u.age
-    cModelEthnic = !cModelEthnic ? 'unknown' : d.Data.u.ethnic
-    cModelMissMfc = !cModelMissMfc ? 'unknown' : d.Data.m.missmfc
-    cModelCountry = !cModelCountry ? 'unknown' : d.Data.u.country
-    cModelNew = !cModelNew ? 'unknown' : d.Data.m.new_model
-    callback();
+    try{
+      roomCount = !roomCount ? -1 : d.Data.m.rc;
+      roomRank = !roomRank ? -1 : d.Data.m.rank;
+      cModelAge = !cModelAge ? 'unknown' : d.Data.u.age
+      cModelEthnic = !cModelEthnic ? 'unknown' : d.Data.u.ethnic
+      cModelMissMfc = !cModelMissMfc ? 'unknown' : d.Data.m.missmfc
+      cModelCountry = !cModelCountry ? 'unknown' : d.Data.u.country
+      cModelNew = !cModelNew ? 'unknown' : d.Data.m.new_model
+      callback();
+    }
+    catch(e){
+      client_log.error(`${m_user} - tried setting metadata but shits broke son`);
+    }
+
 
 }
 
