@@ -15,6 +15,5 @@
 #/usr/bin/supervisord > /var/log/chaturbae/supervisor.log 2>&1 &
 #sleep 3
 #node generate_log.js init "complete"
-#tail -f /var/log/chaturbae/cb_client-output.log
-nodemon mfcbae.js
+node mfcbae.js
 #tail -f /dev/null

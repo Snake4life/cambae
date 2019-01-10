@@ -32,7 +32,7 @@ var cModelCountry=""
 var cModelNew=""
 var rMeta=""
 socket.on("loggedIn", function(u){
-  socket.send(new MFCMessage({ Type: MessageType.FCTYPE_USERNAMELOOKUP, Arg1: 20, Data: `${modelName}` }))
+  socket.send(new MFCMessage({ Type: MessageType.FCTYPE_USERNAMELOOKUP, Arg1: 20, Data: `23459173` }))
   setSessionInfo(u, function(){
 
   })
@@ -53,6 +53,7 @@ socket.on("mfcMessage", function(msg){
       }
 
     if (msg.Type == MessageType.FCTYPE_USERNAMELOOKUP){
+      console.log(msg)
       if(checkIfOnline.didRun != true && (msg.Data.vs == '0' || msg.Data.vs == '127')){
         socket.send(new JoinChannelMessage(sessionId, parseInt(msg.Data.uid)));
       }
@@ -99,10 +100,10 @@ function checkIfOnline(data, callback){
       minutes = 5;
       var the_interval = minutes * 60 * timeInt;
       setTimeout(function(){
-        if(cOnline == true){
+        //if(cOnline == true){
           client_log.error(`${modelName} appears to be offline or the backend websockets aren't responding. Exiting`);
           cOnline = false
-        }
+        //}
         socket.send(new LeaveChannelMessage(sessionId, parseInt(modelID)));
         var offline_log = logger.child({ event: 'logging:myfreebae-offline', site: 'mfc', model_username: `${modelName}`, status: 'offline' })
       }, the_interval);
@@ -110,12 +111,12 @@ function checkIfOnline(data, callback){
     }
     if(camVS == '90' || camVS == '0'){
       roomMetaData(data, function(){ })
-      if(cOnline == false){
+      //if(cOnline == false){
         checkIfOnline.status = true
         var online_log = logger.child({ event: 'logging:myfreebae-online', site: 'mfc', model_username: `${modelName}`, status: `online`, room_count: roomCount, room_rank: roomRank, model_age: cModelAge, model_ethnicity: cModelEthnic, model_was_miss_mfc: cModelMissMfc, model_country: cModelCountry, model_new: cModelNew})
         online_log.info(`${modelName} is online`)
         cOnline = true
-      }
+      //}
 
     }
     checkIfOnline.didRun = true
