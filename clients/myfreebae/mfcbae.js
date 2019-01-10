@@ -32,7 +32,7 @@ var cModelCountry=""
 var cModelNew=""
 var rMeta=""
 socket.on("loggedIn", function(u){
-  socket.send(new MFCMessage({ Type: MessageType.FCTYPE_USERNAMELOOKUP, Arg1: 20, Data: `23459173` }))
+  socket.send(new MFCMessage({ Type: MessageType.FCTYPE_USERNAMELOOKUP, Arg1: 20, Data: `${modelName}` }))
   setSessionInfo(u, function(){
 
   })
@@ -53,7 +53,6 @@ socket.on("mfcMessage", function(msg){
       }
 
     if (msg.Type == MessageType.FCTYPE_USERNAMELOOKUP){
-      console.log(msg)
       if(checkIfOnline.didRun != true && (msg.Data.vs == '0' || msg.Data.vs == '127')){
         socket.send(new JoinChannelMessage(sessionId, parseInt(msg.Data.uid)));
       }
