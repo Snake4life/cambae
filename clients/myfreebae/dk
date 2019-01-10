@@ -2,4 +2,5 @@
 USER=$1
 export MNAME=$USER
 echo $MNAME
+docker-compose -f docker-compose.yml down
 docker-compose -f docker-compose.yml up --remove-orphan

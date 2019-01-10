@@ -18,7 +18,7 @@ cat <<EOF >>docker-compose.template
       io.rancher.container.pull_image: always
       io.rancher.scheduler.affinity:host_label: service=client
     environment:
-      MODELNAME: "##MODEL_NAME##"
+      MODEL_USERNAME: "##MODEL_NAME##"
       BACKEND: "elk.backend.chaturbae.tv"
       SYSLOG_TAG: '{docker: "myfreebae-client"}'
       LOGSTASH_FIELDS: "platform=docker,job=myfreebae-client,model_username=##MODEL_NAME##"

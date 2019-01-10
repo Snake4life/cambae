@@ -13,14 +13,14 @@ mkdir -p pages
 #rm -rf docker-compose.template > /dev/null 2>&1
 cat <<EOF >>docker-compose.template
 ##CLEAN_USERNAME##:
-    image: 'patt1293/myfreebae:build-103'
+    image: 'patt1293/myfreebae:build-${RIMAGE}'
     labels:
       app: myfreebae:client
       io.rancher.container.hostname_override: container_name
       io.rancher.container.pull_image: always
       io.rancher.scheduler.affinity:host_label: service=client
     environment:
-      MODELNAME: "##MODEL_NAME##"
+      MODEL_USERNAME: "##MODEL_NAME##"
       BACKEND: "elk.backend.chaturbae.tv"
       SYSLOG_TAG: '{docker: "myfreebae-client"}'
       LOGSTASH_FIELDS: "platform=docker,job=myfreebae-client,model_username=##MODEL_NAME##"
