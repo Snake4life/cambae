@@ -1,16 +1,7 @@
 #!/bin/bash
 set -x
 FILENAME=$1
-#cb-client:
-#  image: patt1293/chaturbae-client:latest
-#  environment:
-#    CB_USERNAME: "${CB_USERNAME}"
-#    AWSKEY: "${AWSKEY}"
-#    AWSSECRET: "${AWSSECRET}"
-#    SERVICE_IP: "172.26.5.97"
-#    DEBUG: "chaturbae:*"
 mkdir -p pages
-#rm -rf docker-compose.template > /dev/null 2>&1
 cat <<EOF >>docker-compose.template
 ##CLEAN_USERNAME##:
     image: 'patt1293/myfreebae:build-${RIMAGE}'
@@ -30,7 +21,7 @@ cat <<EOF >>docker-compose.template
 EOF
 cp master_list.txt pages
 cd pages
-split -l 100 --numeric-suffixes --additional-suffix='.txt' 'master_list.txt' 'page'
+split -l 30 --numeric-suffixes --additional-suffix='.txt' 'master_list.txt' 'page'
 lastP=$(ls | sort -Vr | head -n 1 | sed 's|page\(.*\)\.txt|\1|g')
 #if [ $lastP -eq '' ]l then
 #
