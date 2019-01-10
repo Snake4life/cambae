@@ -79,12 +79,14 @@ var client_log = logger.child({
         site: 'mfc',
         model_username: `${m_user}`
     })
-    /**
-     *
-     * Description. Listens for the 'loggedIn' event triggered by the MFCSocket module
-     * requires: m_user
-     *
-     */
+
+/**
+*
+* Description. Listens for the 'loggedIn' event triggered by the MFCSocket module
+* requires: m_user
+*
+*/
+
 socket.on("loggedIn", function(u) {
     socket.send(new MFCMessage({
         Type: MessageType.FCTYPE_USERNAMELOOKUP,
@@ -96,11 +98,13 @@ socket.on("loggedIn", function(u) {
     })
 
 });
+
 /**
  *
  * Description. Listens for the 'mfcMessage' event triggered by the MFCSocket module
  *
  */
+ 
 socket.on("mfcMessage", function(msg) {
     //event == chat room message
     if (msg.Type == MessageType.FCTYPE_CMESG) {
