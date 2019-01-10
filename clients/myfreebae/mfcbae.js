@@ -104,7 +104,7 @@ socket.on("loggedIn", function(u) {
  * Description. Listens for the 'mfcMessage' event triggered by the MFCSocket module
  *
  */
- 
+
 socket.on("mfcMessage", function(msg) {
     //event == chat room message
     if (msg.Type == MessageType.FCTYPE_CMESG) {
@@ -138,11 +138,9 @@ socket.on("mfcMessage", function(msg) {
         try {
             //console.log(msg)
             if (checkIfOnline.didRun != true && (msg.Data.vs != '127')) {
-              roomMetaData(msg, function() {})
               socket.send(new JoinChannelMessage(sess_id, parseInt(msg.Data.uid)));
             }
             checkIfOnline(msg, function() {})
-            roomMetaData(msg, function() {})
         } catch (e) {
             console.log(e)
             client_log.error('unable to determine online status, skipping lookup - model is probably offline')
