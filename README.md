@@ -2,6 +2,8 @@
 
 ## Description
 
+A dockerized "sorta-bot-net" running on top of Rancher (for container orchestration) that is incorrectly using Node.js to gather analytics from Chaturbate and MFC (tip amounts, chat messages, clothing status) and pipe it into an ELK stack
+
 This project started as all good ones do, with a little bit of alcohol and a thought "I wonder if I can automate notifications when a live streaming model is doing something _interesting_"
 
 The result is an unholy concoction of node.js, python flask, docker, rancher, ELK

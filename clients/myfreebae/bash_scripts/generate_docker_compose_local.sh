@@ -5,6 +5,10 @@ mkdir -p pages
 cat <<EOF >>docker-compose.template
 ##CLEAN_USERNAME##:
     image: 'patt1293/myfreebae:build-${RIMAGE}'
+    ulimits:
+      nofile:
+        soft: 200000
+        hard: 400000
     labels:
       app: myfreebae:client
       io.rancher.container.hostname_override: container_name
@@ -27,12 +31,9 @@ lastP=$(ls | sort -Vr | head -n 1 | sed 's|page\(.*\)\.txt|\1|g')
 #
 #rm -rf master_list.txt
 cd ../
-for ((i=0;i<=$lastP;i++)); do
-  if [ $i -gt 9 ]; then
-    PPAGE="page$i.txt"
-  else
-    PPAGE="page0$i.txt"
-  fi
+for x in {A..Z}
+do
+  python test.py master_list.txt $x > pages/list_$x.txt
   dOut=""
   while read p; do
     #echo $p
@@ -42,9 +43,9 @@ for ((i=0;i<=$lastP;i++)); do
       dTemplate=$(cat docker-compose.template | sed -e "s|##IMAGE##|$IMAGE|g" -e "s|##MODEL_NAME##|$p|g" -e "s|##CLEAN_USERNAME##|$toLower|g")
       #echo $nameReplaceDash
       dOut="$dOut\n  $dTemplate"
-  done < "pages/$PPAGE"
+  done < "pages/list_$x.txt"
       printf "version: '2'\nservices:$dOut" > docker-compose-generate.yml
-      rancher up -f docker-compose-generate.yml -s myfreebae-stack -u -d -c
+      echo "rancher up -f docker-compose-generate.yml -s myfreebae-$x-stack -u -d -c"
 
 done
 
