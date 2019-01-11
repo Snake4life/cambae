@@ -44,6 +44,7 @@
  var debugTime = process.env.DEBUG_TIME
  var backend = process.env.BACKEND
  var cOnline = false
+ var room_joined = false
  var roomCount;
  var roomRank
  var cModelAge
@@ -106,12 +107,14 @@
   */
 
  socket.on("mfcMessage", function(msg) {
+
      //event == chat room message
      if (msg.Type == MessageType.FCTYPE_CMESG) {
          try {
              // check to see if the chat message come from a user, or either the owner of the room, a bot (CharlesBot), or mfc (FCServer)
              if (msg.Data.nm == m_user || msg.Data.nm == "FCServer" || msg.Data.nm == "CharlesBot") {
                  server_chat = "true"
+                 room_joined = true
              } else {
                  server_chat = "false"
              }
@@ -142,6 +145,7 @@
                  //console.log(msg)
                  if (checkIfOnline.didRun != true && (msg.Data.vs != '127')) {
                      socket.send(new JoinChannelMessage(sess_id, parseInt(msg.Data.uid)));
+                     client_log.info('detected first run after joining room')
                  }
 
                  checkIfOnline(msg, function() {})
@@ -297,6 +301,7 @@
              model_country: cModelCountry,
              model_new: cModelNew
          })
+         cOnline = true
          online_log.info(`${m_user} is online`)
      }
      //model in public
@@ -325,6 +330,7 @@
      //model's video stream is offline
      if (m_vs == '127') {
          checkIfOnline.status = false
+         cOnline = false
          var min = 10;
          var max = 20;
          var randomTime = Math.floor(Math.random() * (+max - +min)) + +min;
@@ -334,9 +340,11 @@
          setTimeout(function() {
              //if(cOnline == true){
              client_log.error(`${m_user} appears to be offline or the backend websockets aren't responding. Exiting`);
-             cOnline = false
+
+
                  //}
              socket.send(new LeaveChannelMessage(sess_id, parseInt(m_id)));
+             room_joined = false
              var offline_log = logger.child({
                  event: 'logging:myfreebae-offline',
                  site: 'mfc',
@@ -395,6 +403,9 @@
 
 
  setInterval(function() {
+   if(room_joined == false && cOnline == true){
+     client_log.error(`ERROR - ${m_user} - script indicates that model is online, but not currently in room`);
+   }
      socket.send(new MFCMessage({
          Type: MessageType.FCTYPE_USERNAMELOOKUP,
          Arg1: 20,
