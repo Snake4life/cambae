@@ -53,7 +53,7 @@
  var cModelCountry
  var cModelNew
  var rMeta = ""
-
+ var onlineButNotInRoom = 0
  /**
   *
   * pino logger
@@ -139,19 +139,19 @@
      // returns with m_id
      if (msg.Type == MessageType.FCTYPE_USERNAMELOOKUP) {
          if (typeof(msg.Data) === 'undefined') {
-             client_log.error('unable to determine online status, skipping lookup - model is probably offline')
+             client_log.error('${m_user} - unable to determine online status, skipping lookup - model is probably offline')
          } else {
              try {
                  //console.log(msg)
                  if (checkIfOnline.didRun != true && (msg.Data.vs != '127')) {
                      socket.send(new JoinChannelMessage(sess_id, parseInt(msg.Data.uid)));
-                     client_log.info('detected first run after joining room')
+                     client_log.info('${m_user} - detected first run after joining room')
                  }
 
                  checkIfOnline(msg, function() {})
              } catch (e) {
                  console.log(e)
-                 client_log.error('unable to determine online status, skipping lookup - model is probably offline')
+                 client_log.error('${m_user} - unable to determine online status, skipping lookup - model is probably offline')
              }
          }
      }
@@ -403,12 +403,18 @@
 
 
  setInterval(function() {
-   if(room_joined == false && cOnline == true){
-     client_log.error(`ERROR - ${m_user} - script indicates that model is online, but not currently in room`);
-   }
      socket.send(new MFCMessage({
          Type: MessageType.FCTYPE_USERNAMELOOKUP,
          Arg1: 20,
          Data: `${m_user}`
      }))
+     if(room_joined == false && cOnline == true){
+       onlineButNotInRoom = onlineButNotInRoom + 1
+       client_log.error(`ERROR - ${m_user} - script indicates that model is online, but not currently in room`);
+       socket.send(new JoinChannelMessage(sess_id, parseInt(msg.Data.uid)));
+       if(onlineButNotInRoom > 4){
+         client_log.error(`ERROR - ${m_user} - unable to join room after 5 attempts, quitting`);
+         process.exit(1);
+       }
+     }
  }, status_inter);
