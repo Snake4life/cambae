@@ -17,3 +17,6 @@ services:
         DEBUG: "myfreebae:*"
       volumes:
         - '.:/usr/src/app'
+      entrypoint:
+        - /usr/local/bin/nodemon
+        - mfcbae.js

@@ -64,22 +64,6 @@
  var logger = require('pino')({
      level: "debug"
  })
- var client_log
- var nudity_log = logger.child({
-     event: 'logging:myfreebae-nude',
-     site: 'mfc',
-     model_username: `${m_user}`
- })
- var ai_log = logger.child({
-     event: 'logging:myfreebae-ai',
-     site: 'mfc',
-     model_username: `${m_user}`
- })
- var client_log = logger.child({
-     event: 'logging:myfreebae-client',
-     site: 'mfc',
-     model_username: `${m_user}`
- })
 
  /**
   *
@@ -118,40 +102,29 @@
              } else {
                  server_chat = "false"
              }
-             logger.child({
-                 event: 'logging:myfreebae-message',
-                 chat_username: msg.Data.nm,
-                 model_id: m_id,
-                 site: 'mfc',
-                 model_username: `${m_user}`,
-                 room_count: `${roomCount}`,
-                 room_rank: roomRank,
-                 server_chat: server_chat,
-                 model_age: cModelAge,
-                 model_ethnicity: cModelEthnic,
-                 model_was_miss_mfc: cModelMissMfc,
-                 model_country: cModelCountry,
-                 model_new: cModelNew
-             }).info(decodeURIComponent(msg.Data.msg))
+             sendLog({level: 'info', event: 'chat', chat_username: msg.Data.nm, server_chat: server_chat, data_msg: decodeURIComponent(msg.Data.msg)})
          } catch (e) {}
      }
      // event = username lookup
      // returns with m_id
      if (msg.Type == MessageType.FCTYPE_USERNAMELOOKUP) {
          if (typeof(msg.Data) === 'undefined') {
-             client_log.error('${m_user} - unable to determine online status, skipping lookup - model is probably offline')
+             sendLog({level: 'debug', event: 'offline', data_msg:`${m_user} - unable to determine online status, skipping lookup - model is probably offline`})
+             client_log.error()
          } else {
              try {
+                 roomMetaData(msg, function() {
+
+                 })
                  //console.log(msg)
                  if (checkIfOnline.didRun != true && (msg.Data.vs != '127')) {
                      socket.send(new JoinChannelMessage(sess_id, parseInt(msg.Data.uid)));
-                     client_log.info('${m_user} - detected first run after joining room')
+                     sendLog({level: 'debug', event: 'room_join', data_msg: `${m_user} - detected first run after joining room`})
                  }
 
                  checkIfOnline(msg, function() {})
              } catch (e) {
-                 console.log(e)
-                 client_log.error('${m_user} - unable to determine online status, skipping lookup - model is probably offline')
+                 sendLog({level: 'debug', event: 'exception', exception: e, data_msg: `${m_user} - unable to determine online status, skipping lookup - model is probably offline`})
              }
          }
      }
@@ -174,49 +147,23 @@
              tip_amount = parseInt(msg.Data.tokens);
              converted_dollar = tip_amount * .05
              mfc_total_dollars = tip_amount * .085483
+             nsfwLogDefault = {
+               level: 'info',
+               event: 'tip',
+               tipper: tipper,
+               tip_amount: parseInt(msg.Data.tokens),
+               usd_amount: converted_dollar,
+               mfc_usd_amount: mfc_total_dollars,
+               nsfw_score: nsfwScore,
+               data_msg: `Tip Amount: ${tip_amount} - Converted to Dollars: ${converted_dollar} - ${m_user} detected nude`
+             }
              if (!isNaN(nsfwScore)) {
                  if (nsfwScore > 51) {
-                     var naked_logger = logger.child({
-                         event: 'logging:myfreebae-tip',
-                         model_username: `${m_user}`,
-                         tipper: tipper,
-                         model_id: m_id,
-                         tip_amount: parseInt(msg.Data.tokens),
-                         usd_amount: converted_dollar,
-                         mfc_usd_amount: mfc_total_dollars,
-                         is_nude: 'true',
-                         nsfw_score: nsfwScore,
-                         room_count: roomCount,
-                         room_rank: roomRank,
-                         model_age: cModelAge,
-                         model_ethnicity: cModelEthnic,
-                         model_was_miss_mfc: cModelMissMfc,
-                         model_country: cModelCountry,
-                         model_new: cModelNew,
-                         site: 'mfc'
-                     });
-                     naked_logger.info(`Tip Amount: ${tip_amount} - Converted to Dollars: ${converted_dollar} - ${m_user} detected nude`);
+                   nsfwLogDefault.is_nude = 'true'
+                   sendLog({nsfwLogDefault})
                  } else {
-                     var not_naked_logger = logger.child({
-                         event: 'logging:myfreebae-tip',
-                         model_username: `${m_user}`,
-                         tipper: tipper,
-                         mfc_model_id: m_id,
-                         tip_amount: parseInt(msg.Data.tokens),
-                         usd_amount: converted_dollar,
-                         mfc_usd_amount: mfc_total_dollars,
-                         is_nude: 'false',
-                         nsfw_score: nsfwScore,
-                         room_count: roomCount,
-                         room_rank: roomRank,
-                         model_age: cModelAge,
-                         model_ethnicity: cModelEthnic,
-                         model_was_miss_mfc: cModelMissMfc,
-                         model_country: cModelCountry,
-                         model_new: cModelNew,
-                         site: 'mfc'
-                     });
-                     not_naked_logger.info(`Tip Amount: ${tip_amount} - Converted to Dollars: ${converted_dollar} - ${m_user} detected nude`);
+                   nsfwLogDefault.is_nude = 'false'
+                   sendLog({nsfwLogDefault})
                  }
              }
          });
@@ -281,28 +228,17 @@
      //model id and modesl status (vs)
      m_id = data.Data.uid
      m_vs = data.Data.vs
-
      //model in private
+     var statusLogDefault = {
+
+     }
      if (m_vs == '12') {
          checkIfOnline.status = true
          roomMetaData(data, function() {
 
          })
-         var online_log = logger.child({
-             event: 'logging:myfreebae-online',
-             site: 'mfc',
-             model_username: `${m_user}`,
-             status: `private`,
-             room_count: roomCount,
-             room_rank: roomRank,
-             model_age: cModelAge,
-             model_ethnicity: cModelEthnic,
-             model_was_miss_mfc: cModelMissMfc,
-             model_country: cModelCountry,
-             model_new: cModelNew
-         })
+         sendLog({level: 'info', event: 'status', status: 'private', data_msg: `${m_user} is in private show`})
          cOnline = true
-         online_log.info(`${m_user} is online`)
      }
      //model in public
      if (m_vs == '90' || m_vs == '0') {
@@ -310,20 +246,7 @@
 
          })
          checkIfOnline.status = true
-         var online_log = logger.child({
-             event: 'logging:myfreebae-online',
-             site: 'mfc',
-             model_username: `${m_user}`,
-             status: `online`,
-             room_count: roomCount,
-             room_rank: roomRank,
-             model_age: cModelAge,
-             model_ethnicity: cModelEthnic,
-             model_was_miss_mfc: cModelMissMfc,
-             model_country: cModelCountry,
-             model_new: cModelNew
-         })
-         online_log.info(`${m_user} is online`)
+         sendLog({level: 'info', event: 'status', status: 'online', data_msg: `${m_user} is in online`})
          cOnline = true
 
      }
@@ -339,18 +262,12 @@
          var the_interval = minutes * 60 * timeInt;
          setTimeout(function() {
              //if(cOnline == true){
-             client_log.error(`${m_user} appears to be offline or the backend websockets aren't responding. Exiting`);
-
-
-                 //}
-             socket.send(new LeaveChannelMessage(sess_id, parseInt(m_id)));
+             sendLog({level: 'info', event: 'status', status: 'offline', data_msg: `${m_user} is offline`})
+             if(room_joined == true){
+               socket.send(new LeaveChannelMessage(sess_id, parseInt(m_id)));
+               sendLog({level: 'debug', event: 'status', status: 'offline', data_msg: `Attempting to leave ${m_user}'s room`})
+             }
              room_joined = false
-             var offline_log = logger.child({
-                 event: 'logging:myfreebae-offline',
-                 site: 'mfc',
-                 model_username: `${m_user}`,
-                 status: 'offline'
-             })
          }, the_interval);
 
      }
@@ -364,17 +281,39 @@
      try {
          roomCount = !roomCount ? -1 : d.Data.m.rc;
          roomRank = !roomRank ? -1 : d.Data.m.rank;
-         cModelAge = !cModelAge ? 'unknown' : d.Data.u.age
+         cModelAge = !cModelAge ? -1 : d.Data.u.age
          cModelEthnic = !cModelEthnic ? 'unknown' : d.Data.u.ethnic
-         cModelMissMfc = !cModelMissMfc ? 'unknown' : d.Data.m.missmfc
+         cModelMissMfc = !cModelMissMfc ? -1 : d.Data.m.missmfc
          cModelCountry = !cModelCountry ? 'unknown' : d.Data.u.country
          cModelNew = !cModelNew ? 'unknown' : d.Data.m.new_model
          callback();
      } catch (e) {
-         client_log.error(`${m_user} - tried setting metadata but shits broke son`);
+       sendLog({level: 'error', event: 'set_metadata', data_msg:`${m_user} - tried setting metadata but shits broke son`})
      }
 
 
+ }
+ function sendLog (logInfo){
+   logInfo = logInfo || {};
+   var defaultLogger = {
+     model_id: m_id,
+     site: 'mfc',
+     model_username: `${m_user}`,
+     //room_count: `${roomCount}`,
+     room_rank: roomRank || -1,
+     room_count: roomCount || -1,
+     model_age: cModelAge || -1,
+     model_ethnicity: cModelEthnic || 'unknown',
+     model_was_miss_mfc: cModelMissMfc|| 'unknown',
+     model_country: cModelCountry|| 'unknown',
+     model_new: cModelNew || -1,
+   }
+   logMsg = logInfo.data_msg
+   delete logInfo.data_msg
+   logInfo = {...defaultLogger, ...logInfo}
+   logInfo.event = "logging:myfreebae-" + logInfo.event
+   var mfc_logger = logger.child(logInfo)
+   mfc_logger[logInfo.level](logMsg);
  }
 
  function exposeRMeta(d, callback) {
@@ -410,10 +349,10 @@
      }))
      if(room_joined == false && cOnline == true){
        onlineButNotInRoom = onlineButNotInRoom + 1
-       client_log.error(`ERROR - ${m_user} - script indicates that model is online, but not currently in room`);
+       sendLog({level: 'error', event: 'online_not_in_room', data_msg: `ERROR - ${m_user} - script indicates that model is online, but not currently in room`})
        socket.send(new JoinChannelMessage(sess_id, parseInt(m_id)));
        if(onlineButNotInRoom > 4){
-         client_log.error(`ERROR - ${m_user} - unable to join room after 5 attempts, quitting`);
+         sendLog({level: 'error', event: 'online_not_in_room', data_msg: `ERROR - ${m_user} - unable to join room after 5 attempts, quitting`})
          process.exit(1);
        }
      }
