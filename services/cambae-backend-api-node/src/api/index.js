@@ -33,5 +33,5 @@ router.use('/users', user)
 router.use('/auth', auth)
 router.use('/password-resets', passwordReset)
 router.use('/mfc-status', mfcStatus)
-
+router.use('/backend-api/mfc-status', mfcStatus)
 export default router
