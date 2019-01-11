@@ -411,7 +411,7 @@
      if(room_joined == false && cOnline == true){
        onlineButNotInRoom = onlineButNotInRoom + 1
        client_log.error(`ERROR - ${m_user} - script indicates that model is online, but not currently in room`);
-       socket.send(new JoinChannelMessage(sess_id, parseInt(msg.Data.uid)));
+       socket.send(new JoinChannelMessage(sess_id, parseInt(m_id)));
        if(onlineButNotInRoom > 4){
          client_log.error(`ERROR - ${m_user} - unable to join room after 5 attempts, quitting`);
          process.exit(1);
