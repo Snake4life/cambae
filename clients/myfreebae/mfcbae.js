@@ -110,7 +110,6 @@
      if (msg.Type == MessageType.FCTYPE_USERNAMELOOKUP) {
          if (typeof(msg.Data) === 'undefined') {
              sendLog({level: 'debug', event: 'offline', data_msg:`${m_user} - unable to determine online status, skipping lookup - model is probably offline`})
-             client_log.error()
          } else {
              try {
                  roomMetaData(msg, function() {
@@ -160,10 +159,10 @@
              if (!isNaN(nsfwScore)) {
                  if (nsfwScore > 51) {
                    nsfwLogDefault.is_nude = 'true'
-                   sendLog({nsfwLogDefault})
+                   sendLog(nsfwLogDefault)
                  } else {
                    nsfwLogDefault.is_nude = 'false'
-                   sendLog({nsfwLogDefault})
+                   sendLog(nsfwLogDefault)
                  }
              }
          });
@@ -301,19 +300,20 @@
      model_username: `${m_user}`,
      //room_count: `${roomCount}`,
      room_rank: roomRank || -1,
-     room_count: roomCount || -1,
+     room_count: parseInt(roomCount) || -1,
      model_age: cModelAge || -1,
      model_ethnicity: cModelEthnic || 'unknown',
      model_was_miss_mfc: cModelMissMfc|| 'unknown',
      model_country: cModelCountry|| 'unknown',
      model_new: cModelNew || -1,
    }
+   level = logInfo.level || 'debug'
    logMsg = logInfo.data_msg
    delete logInfo.data_msg
    logInfo = {...defaultLogger, ...logInfo}
    logInfo.event = "logging:myfreebae-" + logInfo.event
    var mfc_logger = logger.child(logInfo)
-   mfc_logger[logInfo.level](logMsg);
+   mfc_logger[level](logMsg);
  }
 
  function exposeRMeta(d, callback) {
@@ -332,7 +332,7 @@
      callback(u);
  }
  //check model's online status every ${watch_interval_min} minutes
- //hacky, we check to see fi we've run before, if not, lets run quicklym if yes, run every ${watch_interval_min} minutes
+ //hacky, we check to see fi we've run before, if not, lets run quickly if yes, run every ${watch_interval_min} minutes
  if (checkIfOnline.didRun != true) {
      var status_inter = 1 * 20 * 1000;
  } else {
