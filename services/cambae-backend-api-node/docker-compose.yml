@@ -19,7 +19,7 @@ services:
   mongodb:
     image: 'mongo'
     labels:
-      io.rancher.scheduler.affinity:host_label: service=elk
+      io.rancher.scheduler.affinity:host_label: has_elk=true
     ports:
       - "27017:27017"
     volumes:
