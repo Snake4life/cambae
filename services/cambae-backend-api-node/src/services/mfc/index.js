@@ -3,7 +3,6 @@ var exec = require('child_process').exec
 var spawn = require('child_process').spawn
 import Promise from 'bluebird'
 var request = require('request');
-console.log(process.cwd())
 
 function getNude (model_name, callback){
   var filename = './src/services/bash_scripts/streamlink.sh'
@@ -11,15 +10,12 @@ function getNude (model_name, callback){
   var mfcUrl = `https://www.myfreecams.com/${model_name}`
   var filePath = './src/services/bash_scripts/models/'
   var args = ` ${mfcUrl} ${model_name}`
-  console.log(args)
   var end = ''
   //result = subprocess.run(['bash', '/usr/src/app/app/scripts/streamlink.sh', mkvPath, mfcUrl, model_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
   var child = spawn('bash', [filename, mkvPath, mfcUrl, model_name, filePath])
-  console.log(`${filename} ${mkvPath} ${model_name} ${filePath}`)
     // Do async job
     child.stdout.on('data', (data) => {
         end = data.toString()
-        console.log(end)
     })
     child.on('exit', () => {
       callback(end);

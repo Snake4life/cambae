@@ -32,7 +32,7 @@ stage ("Push Docker Image") {
 stage ('Deploy Docker Image') {
   node{
       dir('services/cambae-backend-api-node'){
-      sh "export RELEASE=build-${env.BUILD_NUMBER} && rancher up -s cambae-backend-api-node -u -d -c --force-recreate"
+      sh "export RELEASE=build-${env.BUILD_NUMBER} && rancher up -s backend-api-node -u -d -c --force-recreate"
       }
   }
 }
