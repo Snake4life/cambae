@@ -321,7 +321,7 @@
      room_count: parseInt(roomCount) || -1,
      model_age: cModelAge || -1,
      model_ethnicity: cModelEthnic || 'unknown',
-     model_was_miss_mfc: cModelMissMfc|| 'unknown',
+     model_was_miss_mfc: cModelMissMfc|| -1,
      model_country: cModelCountry|| 'unknown',
      model_new: cModelNew || -1,
    }
