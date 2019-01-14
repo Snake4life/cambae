@@ -41,7 +41,7 @@ const config = {
   test: { },
   development: {
     mongo: {
-      uri: 'mongodb://mongodb/cambae-backend-api-node-dev',
+      uri: 'mongodb://mongo.backend.svc.cluster.local/cambae-backend-api-node-dev',
       options: {
         debug: true
       }
@@ -51,7 +51,7 @@ const config = {
     ip: process.env.IP || undefined,
     port: 6902,
     mongo: {
-      uri: process.env.MONGODB_URI || 'mongodb://mongodb/cambae-backend-api-node'
+      uri: process.env.MONGODB_URI || 'mongodb://mongo.backend.svc.cluster.local/cambae-backend-api-node'
     }
   }
 }

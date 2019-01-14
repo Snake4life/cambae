@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    field.cattle.io/targetWorkloadIds: '["deployment:backend:cambae-backend-api-node"]'
+    external-dns.alpha.kubernetes.io/hostname: backend-api.external-dns.cambae.io
+  name: backend-service
+  labels:
+    run: backend-service
+spec:
+  ports:
+  - port: 6902
+    protocol: TCP
+  selector:
+    run: backend-service
