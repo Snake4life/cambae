@@ -108,6 +108,11 @@
      // event = username lookup
      // returns with m_id
      if (msg.Type == MessageType.FCTYPE_USERNAMELOOKUP) {
+       console.log(msg)
+       if (typeof(msg.Data.u.camserv) == 'undefined') {
+         msg.Data.u.camserv = 0
+       }
+       console.log(msg)
          if (typeof(msg.Data) === 'undefined') {
              sendLog({level: 'debug', event: 'offline', data_msg:`${m_user} - unable to determine online status, skipping lookup - model is probably offline`})
          } else {
@@ -117,12 +122,15 @@
                  })
                  //console.log(msg)
                  if (checkIfOnline.didRun != true && (msg.Data.vs != '127')) {
+                   if(msg.Data.u.camserv != 0){
                      socket.send(new JoinChannelMessage(sess_id, parseInt(msg.Data.uid)));
                      sendLog({level: 'debug', event: 'room_join', data_msg: `${m_user} - detected first run after joining room`})
+                   }
                  }
 
                  checkIfOnline(msg, function() {})
              } catch (e) {
+                console.log(e)
                  sendLog({level: 'debug', event: 'exception', exception: e, data_msg: `${m_user} - unable to determine online status, skipping lookup - model is probably offline`})
              }
          }
@@ -137,7 +145,7 @@
              headers: {
                  'content-type': 'application/x-www-form-urlencoded'
              },
-             url: `http://${backend}:6902/mfc-status/${m_user}`,
+             url: `http://api.backend.svc.cluster.local:5000:6902/mfc-status/${m_user}`,
              body: "hi=heh"
          }, function(error, response, body) {
              resp = JSON.parse(body);
@@ -153,15 +161,16 @@
                tip_amount: parseInt(msg.Data.tokens),
                usd_amount: converted_dollar,
                mfc_usd_amount: mfc_total_dollars,
-               nsfw_score: nsfwScore,
-               data_msg: `Tip Amount: ${tip_amount} - Converted to Dollars: ${converted_dollar} - ${m_user} detected nude`
+               nsfw_score: nsfwScore
              }
              if (!isNaN(nsfwScore)) {
                  if (nsfwScore > 51) {
                    nsfwLogDefault.is_nude = 'true'
+                   nsfwLogDefault.data_msg = `Tip Amount: ${tip_amount} - Converted to Dollars: ${converted_dollar} - ${m_user} detected nude`
                    sendLog(nsfwLogDefault)
                  } else {
                    nsfwLogDefault.is_nude = 'false'
+                   nsfwLogDefault.data_msg = `Tip Amount: ${tip_amount} - Converted to Dollars: ${converted_dollar} - ${m_user} NOT detected nude`
                    sendLog(nsfwLogDefault)
                  }
              }
@@ -227,6 +236,9 @@
      //model id and modesl status (vs)
      m_id = data.Data.uid
      m_vs = data.Data.vs
+     m_cs = data.Data.u.camserv
+
+     console.log(m_cs)
      //model in private
      var statusLogDefault = {
 
@@ -240,7 +252,7 @@
          cOnline = true
      }
      //model in public
-     if (m_vs == '90' || m_vs == '0') {
+     if ((m_vs == '90' || m_vs == '0') && m_cs != 0) {
          roomMetaData(data, function() {
 
          })
@@ -248,6 +260,9 @@
          sendLog({level: 'info', event: 'status', status: 'online', data_msg: `${m_user} is in online`})
          cOnline = true
 
+     }
+     else{
+       sendLog({level: 'debug', event: 'offline', data_msg: `${m_user}'s chatroom appears to be online, but her Cam Server isn't defined, are you sure she's really online?`})
      }
      //model's video stream is offline
      if (m_vs == '127') {

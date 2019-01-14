@@ -4,7 +4,7 @@ metadata:
   creationTimestamp: null
   name: cambae-backend-api-node
 spec:
-  replicas: 10
+  replicas: 1
   strategy:
     type: Recreate
   selector:
@@ -17,7 +17,14 @@ spec:
         io.kompose.service: cambae-backend-api-node
     spec:
       containers:
-      - image: patt1293/cambae-backend-api-node:build-31
+      - env:
+        - name: SENDGRID_KEY
+          value: '1234'
+        - name: MASTER_KEY
+          value: kQe5bv7doIgLauIgL1DmnPeGr7cd5iS9
+        - name: JWT_SECRET
+          value: q478FRlq1Dy37JjcO3ZWL9v3lzUllBIg
+        image: patt1293/cambae-backend-api-node:build-32
         imagePullPolicy: Always
         name: cambae-backend-api-node
         ports:
@@ -57,6 +64,43 @@ spec:
         ports:
         - containerPort: 27017
           name: 127017tcp01
+          protocol: TCP
+        resources: {}
+      dnsPolicy: ClusterFirst
+      imagePullSecrets:
+      - name: dockerhub
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+status: {}
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  name: open-nsfw
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      io.kompose.service: open-nsfw
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: open-nsfw
+    spec:
+      containers:
+      - env:
+        - name: 'PORT'
+          value: '5000'
+        image: patt1293/open-nsfw:build-21
+        imagePullPolicy: Always
+        name: open-nsfw
+        ports:
+        - containerPort: 5000
+          name: 5000tcp01
           protocol: TCP
         resources: {}
       dnsPolicy: ClusterFirst

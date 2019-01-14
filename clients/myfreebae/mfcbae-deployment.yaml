@@ -1,0 +1,37 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    app: myfreebae:client
+  creationTimestamp: null
+  name: MNAME-mfcbae
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: mfcbae
+    spec:
+      containers:
+      - env:
+        - name: BACKEND
+          value: elk.backend.chaturbae.tv
+        - name: DEBUG
+          value: myfreebae:*
+        - name: DECODE_JSON_LOGS
+          value: "true"
+        - name: LOGSTASH_FIELDS
+          value: platform=docker,job=myfreebae-client,model_username=MCNAME
+        - name: MODEL_USERNAME
+          value: MCNAME
+        - name: SYSLOG_TAG
+          value: '{docker: "myfreebae-client"}'
+        image: patt1293/myfreebae:latest
+        name: MNAME-mfcbae
+        resources: {}
+      restartPolicy: Always
+      dnsPolicy: ClusterFirst
+status: {}

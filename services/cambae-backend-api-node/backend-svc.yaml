@@ -3,13 +3,46 @@ kind: Service
 metadata:
   annotations:
     field.cattle.io/targetWorkloadIds: '["deployment:backend:cambae-backend-api-node"]'
-    external-dns.alpha.kubernetes.io/hostname: backend-api.external-dns.cambae.io
-  name: backend-service
+    external-dns.alpha.kubernetes.io/hostname: api.external-dns.cambae.io
+  name: api
   labels:
-    run: backend-service
+    run: api
 spec:
   ports:
-  - port: 6902
+  - name: 6902tcp02
+    port: 6902
     protocol: TCP
   selector:
-    run: backend-service
+    run: api
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    field.cattle.io/targetWorkloadIds: '["deployment:backend:open-nsfw"]'
+    external-dns.alpha.kubernetes.io/hostname: open-nsfw.external-dns.cambae.io
+  name: open-nsfw
+  labels:
+    run: open-nsfw
+spec:
+  ports:
+  - name: 5000tcp02
+    port: 5000
+    protocol: TCP
+  selector:
+    run: open-nsfw
+---
+  apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      field.cattle.io/targetWorkloadIds: '["deployment:backend:mongo"]'
+    name: mongo
+    labels:
+      run: mongo
+  spec:
+    ports:
+    - port: 27017
+      protocol: TCP
+    selector:
+      run: mongo
