@@ -108,7 +108,6 @@
      // event = username lookup
      // returns with m_id
      if (msg.Type == MessageType.FCTYPE_USERNAMELOOKUP) {
-       console.log(msg)
        try{
         if (typeof(msg.Data.u) == 'undefined') {
          if (typeof(msg.Data.u.camserv) == 'undefined') {
@@ -117,10 +116,9 @@
        }
        }
        catch(e){
-         
+
        }
 
-       console.log(msg)
          if (typeof(msg.Data) === 'undefined') {
              sendLog({level: 'debug', event: 'offline', data_msg:`${m_user} - unable to determine online status, skipping lookup - model is probably offline`})
          } else {
@@ -138,7 +136,6 @@
 
                  checkIfOnline(msg, function() {})
              } catch (e) {
-                console.log(e)
                  sendLog({level: 'debug', event: 'exception', exception: e, data_msg: `${m_user} - unable to determine online status, skipping lookup - model is probably offline`})
              }
          }
@@ -153,7 +150,7 @@
              headers: {
                  'content-type': 'application/x-www-form-urlencoded'
              },
-             url: `http://api.backend.svc.cluster.local:5000:6902/mfc-status/${m_user}`,
+             url: `http://api.backend.svc.cluster.local:6902/mfc-status/${m_user}`,
              body: "hi=heh"
          }, function(error, response, body) {
              resp = JSON.parse(body);
@@ -245,8 +242,6 @@
      m_id = data.Data.uid
      m_vs = data.Data.vs
      m_cs = data.Data.u.camserv
-
-     console.log(m_cs)
      //model in private
      var statusLogDefault = {
 

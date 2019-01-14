@@ -29,7 +29,7 @@ spec:
           value: MCNAME
         - name: SYSLOG_TAG
           value: '{docker: "myfreebae-client"}'
-        image: patt1293/myfreebae:build-119
+        image: patt1293/myfreebae:build-120
         name: MNAME-mfcbae
         resources: {}
       restartPolicy: Always
