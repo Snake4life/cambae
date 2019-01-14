@@ -109,9 +109,17 @@
      // returns with m_id
      if (msg.Type == MessageType.FCTYPE_USERNAMELOOKUP) {
        console.log(msg)
-       if (typeof(msg.Data.u.camserv) == 'undefined') {
-         msg.Data.u.camserv = 0
+       try{
+        if (typeof(msg.Data.u) == 'undefined') {
+         if (typeof(msg.Data.u.camserv) == 'undefined') {
+           msg.Data.u.camserv = 0
+         }
        }
+       }
+       catch(e){
+         
+       }
+
        console.log(msg)
          if (typeof(msg.Data) === 'undefined') {
              sendLog({level: 'debug', event: 'offline', data_msg:`${m_user} - unable to determine online status, skipping lookup - model is probably offline`})
